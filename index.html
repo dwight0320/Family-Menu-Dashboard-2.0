@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D'Angelo Family Household - Lutong Bahay Menu & Moments</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-amber-50/40 text-slate-800 min-h-screen">
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-amber-100 shadow-xs">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      
+      <!-- Brand & Family Title -->
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('feed')">
+        <span class="text-3xl">🍲</span>
+        <div>
+          <h1 class="text-xl font-extrabold text-amber-900 leading-tight">D'Angelo Family Household</h1>
+          <p class="text-xs font-semibold text-amber-600" id="headerHouseholdSub">Household ID: DANGELO-HOME</p>
+        </div>
+      </div>
+
+      <!-- Right Action Controls -->
+      <div class="flex items-center space-x-3">
+        
+        <!-- User Profile Pill -->
+        <button onclick="openProfileModal()" class="flex items-center space-x-2 bg-amber-50 hover:bg-amber-100/80 border border-amber-200/80 px-3 py-1.5 rounded-full transition">
+          <img id="userAvatarHeader" src="https://api.dicebear.com/7.x/bottts/svg?seed=Dwight" alt="Profile" class="w-7 h-7 rounded-full object-cover border border-amber-300">
+          <span id="userNameHeader" class="text-xs font-bold text-amber-900">Dwight</span>
+          <i class="fa-solid fa-gear text-amber-600 text-xs ml-1"></i>
+        </button>
+
+        <!-- QR Code Modal Button -->
+        <button onclick="openQRModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 shadow-xs">
+          <i class="fa-solid fa-qrcode"></i>
+          <span class="hidden sm:inline">QR Scan</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <div class="max-w-6xl mx-auto px-4 pt-1 pb-2 flex overflow-x-auto space-x-2 no-scrollbar border-t border-slate-100/80">
+      <button onclick="switchTab('feed')" id="nav-feed" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap bg-amber-600 text-white">
+        <i class="fa-solid fa-newspaper"></i> <span>Family News & Moments</span>
+      </button>
+      <button onclick="switchTab('dishes')" id="nav-dishes" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-amber-100/50">
+        <i class="fa-solid fa-utensils"></i> <span>Menu & Dishes</span>
+      </button>
+      <button onclick="switchTab('pantry')" id="nav-pantry" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-amber-100/50">
+        <i class="fa-solid fa-boxes-stacked"></i> <span>Pantry Tracker</span>
+      </button>
+      <button onclick="switchTab('shopping')" id="nav-shopping" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-amber-100/50">
+        <i class="fa-solid fa-cart-shopping"></i> <span>Shopping List</span>
+      </button>
+      <button onclick="switchTab('log')" id="nav-log" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-amber-100/50">
+        <i class="fa-solid fa-clock-rotate-left"></i> <span>Cooking Log</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content View Container -->
+  <main class="max-w-6xl mx-auto px-4 py-6">
+
+    <!-- TAB 1: FAMILY NEWS & MOMENTS FEED -->
+    <section id="view-feed" class="space-y-6">
+      
+      <!-- New Post Box -->
+      <div class="bg-white rounded-3xl p-5 border border-amber-100 shadow-xs">
+        <div class="flex items-start space-x-3">
+          <img id="userAvatarPostBox" src="https://api.dicebear.com/7.x/bottts/svg?seed=Dwight" class="w-10 h-10 rounded-full object-cover border border-amber-200">
+          <div class="flex-1 space-y-3">
+            <textarea id="postInputText" rows="2" placeholder="Share food updates, moments, or recipe ideas with D'Angelo Family..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"></textarea>
+            
+            <div id="postImagePreviewContainer" class="hidden relative rounded-2xl overflow-hidden max-h-60 bg-slate-100">
+              <img id="postImagePreview" src="" class="w-full h-full object-cover">
+              <button onclick="removePostImage()" class="absolute top-2 right-2 bg-slate-900/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <div class="flex items-center justify-between pt-1">
+              <label class="cursor-pointer text-amber-700 hover:text-amber-800 text-xs font-bold flex items-center space-x-1.5 bg-amber-50 px-3 py-2 rounded-xl border border-amber-200/60">
+                <i class="fa-solid fa-image text-amber-600"></i>
+                <span>Add Photo</span>
+                <input type="file" id="postImageFileInput" accept="image/*" class="hidden" onchange="handlePostImageSelect(event)">
+              </label>
+
+              <button onclick="createNewPost()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-5 py-2 rounded-xl shadow-xs transition">
+                Publish Post
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feed Posts Container -->
+      <div id="feedPostsContainer" class="space-y-6"></div>
+    </section>
+
+    <!-- TAB 2: MENU & DISHES -->
+    <section id="view-dishes" class="hidden space-y-6">
+      
+      <!-- Filter Bar -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-amber-100 shadow-xs">
+        <div class="flex items-center space-x-2 bg-amber-50 p-1 rounded-xl">
+          <button onclick="setDishMealFilter('all')" id="dishFilter-all" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-600 text-white shadow-xs">All 22 Dishes</button>
+          <button onclick="setDishMealFilter('Agahan')" id="dishFilter-Agahan" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-amber-900">🌅 Agahan (13)</button>
+          <button onclick="setDishMealFilter('Tanghalian')" id="dishFilter-Tanghalian" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-amber-900">☀️ Tanghalian (9)</button>
+        </div>
+
+        <div class="flex items-center space-x-3 w-full sm:w-auto">
+          <input type="text" id="dishSearchInput" oninput="renderDishes()" placeholder="Search dish name..." class="w-full sm:w-48 px-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500">
+        </div>
+      </div>
+
+      <!-- Dishes Grid -->
+      <div id="dishesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- TAB 3: PANTRY TRACKER -->
+    <section id="view-pantry" class="hidden space-y-6">
+      
+      <!-- Dashboard Stats -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded-2xl border border-amber-100 shadow-xs">
+          <p class="text-xs font-bold text-slate-400">Total Items</p>
+          <p id="statTotalItems" class="text-2xl font-black text-slate-800">0</p>
+        </div>
+        <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-100 shadow-xs">
+          <p class="text-xs font-bold text-emerald-600">In Stock</p>
+          <p id="statInStock" class="text-2xl font-black text-emerald-800">0</p>
+        </div>
+        <div class="bg-amber-50 p-4 rounded-2xl border border-amber-100 shadow-xs">
+          <p class="text-xs font-bold text-amber-600">Low Stock</p>
+          <p id="statLowStock" class="text-2xl font-black text-amber-800">0</p>
+        </div>
+        <div class="bg-rose-50 p-4 rounded-2xl border border-rose-100 shadow-xs">
+          <p class="text-xs font-bold text-rose-600">Out of Stock</p>
+          <p id="statOutOfStock" class="text-2xl font-black text-rose-80
