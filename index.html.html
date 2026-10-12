@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lutong Bahay - Family Kitchen & Moments</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        terracotta: {
+                            50: '#fff7f5',
+                            100: '#ffede8',
+                            500: '#ea580c',
+                            600: '#c2410c',
+                            700: '#9a3412',
+                            800: '#7c2d12',
+                            900: '#64230d',
+                        },
+                        amberWarm: {
+                            50: '#fffbe0',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            800: '#92400e',
+                        },
+                        emeraldLeaf: {
+                            500: '#15803d',
+                            600: '#166534',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .serif-title { font-family: 'Playfair Display', serif; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+    </style>
+</head>
+<body class="bg-amberWarm-50/60 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 min-h-screen flex flex-col antialiased">
+
+    <header class="sticky top-0 z-30 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-b border-amberWarm-200 dark:border-zinc-800 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="flex items-center justify-between h-16 sm:h-20">
+                
+                <!-- Logo & Household ID -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('feed')">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-terracotta-700 text-white flex items-center justify-center shadow-lg shadow-terracotta-700/20">
+                        <i class="fa-solid fa-camera-retro text-lg sm:text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="serif-title font-extrabold text-xl sm:text-2xl text-terracotta-800 dark:text-terracotta-500 leading-none">
+                            Lutong Bahay
+                        </h1>
+                        <p class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-emeraldLeaf-600 mt-1 flex items-center gap-1.5">
+                            <span id="householdBadge" class="bg-amberWarm-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-terracotta-800 dark:text-terracotta-400 font-mono">
+                                FAMILY-DELACRUZ-2026
+                            </span>
+                            <button onclick="openAccountModal()" class="text-terracotta-700 underline text-[10px] hover:opacity-80">Change</button>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Actions & Account -->
+                <div class="flex items-center space-x-2 sm:space-x-3">
+                    <button onclick="openPostModal()" class="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-terracotta-700 hover:bg-terracotta-800 text-white text-xs font-bold shadow-md shadow-terracotta-700/20 transition-all">
+                        <i class="fa-solid fa-circle-plus text-sm"></i>
+                        <span class="hidden sm:inline">Share Moment</span>
+                    </button>
+
+                    <button onclick="openQRModal()" class="p-2.5 rounded-xl bg-emeraldLeaf-600 text-white text-xs font-bold hover:bg-emeraldLeaf-500 shadow-sm" title="Scan QR Code">
+                        <i class="fa-solid fa-qrcode text-sm"></i>
+                    </button>
+
+                    <div class="pl-2 border-l border-amberWarm-200 dark:border-zinc-800 flex items-center space-x-2">
+                        <button onclick="openAccountModal()" class="flex items-center space-x-2 p-1.5 rounded-xl hover:bg-amberWarm-100 dark:hover:bg-zinc-800">
+                            <div id="userAvatar" class="w-8 h-8 rounded-full bg-terracotta-700 text-white font-extrabold flex items-center justify-center text-xs">
+                                M
+                            </div>
+                            <span id="userNameDisplay" class="hidden md:inline text-xs font-bold text-zinc-800 dark:text-zinc-200">
+                                Mama Maria
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-amberWarm-100/80 dark:bg-zinc-900 border-t border-amberWarm-200 dark:border-zinc-800">
+            <div class="max-w-7xl mx-auto px-4 flex items-center gap-2 overflow-x-auto no-scrollbar py-2 text-xs font-bold">
+                <button id="nav-feed" onclick="switchTab('feed')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-xl bg-terracotta-700 text-white shadow-xs shrink-0">
+                    <i class="fa-solid fa-newspaper text-sm"></i> 📸 Family News &amp; Moments
+                </button>
+                <button id="nav-menu" onclick="switchTab('menu')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-amberWarm-200 dark:border-zinc-700 hover:border-terracotta-500 shrink-0">
+                    <i class="fa-solid fa-utensils text-terracotta-600"></i> 🍽️ Menu &amp; Dishes
+                </button>
+                <button id="nav-pantry" onclick="switchTab('pantry')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-amberWarm-200 dark:border-zinc-700 hover:border-terracotta-500 shrink-0">
+                    <i class="fa-solid fa-boxes-stacked text-emeraldLeaf-600"></i> 📦 Pantry Stock
+                </button>
+                <button id="nav-log" onclick="switchTab('log')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-amberWarm-200 dark:border-zinc-700 hover:border-terracotta-500 shrink-0">
+                    <i class="fa-solid fa-clock-rotate-left text-blue-600"></i> 📜 Cooking Log
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
+
+        <!-- ================= TAB 1: FAMILY NEWS DASHBOARD & MOMENTS ================= -->
+        <section id="tab-content-feed" class="tab-view space-y-6 max-w-4xl mx-auto">
+            
+            <!-- Welcome Banner -->
+            <div class="bg-gradient-to-r from-terracotta-700 to-terracotta-900 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
+                <div class="relative z-10 space-y-2">
+                    <span class="px-3 py-1 rounded-full bg-white/20 text-[11px] font-extrabold uppercase tracking-wider backdrop-blur-md">
+                        <i class="fa-solid fa-house-heart mr-1"></i> Shared Family Hub
+                    </span>
+                    <h2 class="serif-title text-2xl sm:text-3xl font-extrabold">Welcome to Dela Cruz Family Moments!</h2>
+                    <p class="text-xs sm:text-sm text-terracotta-100 max-w-2xl">
+                        Share kitchen news, food pictures, recipe ideas, or grocery alerts with everyone logged into household <span class="font-mono underline font-bold">FAMILY-DELACRUZ-2026</span>.
+                    </p>
+                </div>
+                <i class="fa-solid fa-heart-circle-bolt absolute -bottom-6 -right-6 text-9xl text-white/10 pointer-events-none"></i>
+            </div>
+
+            <!-- Quick Post Action Card -->
+            <div class="bg-white dark:bg-zinc-900 rounded-3xl p-5 border border-amberWarm-200 dark:border-zinc-800 shadow-sm flex items-center justify-between gap-4">
+                <div class="flex items-center space-x-3 flex-1">
+                    <div id="quickAvatar" class="w-10 h-10 rounded-2xl bg-terracotta-700 text-white font-extrabold flex items-center justify-center text-sm shrink-0">
+                        M
+                    </div>
+                    <button onclick="openPostModal()" class="w-full text-left px-4 py-3 rounded-2xl bg-amberWarm-50 dark:bg-zinc-800 text-zinc-500 text-xs sm:text-sm hover:bg-amberWarm-100 transition">
+                        Share a food photo, kitchen news, or moment with family...
+                    </button>
+                </div>
+                <button onclick="openPostModal()" class="p-3 rounded-2xl bg-terracotta-700 text-white hover:bg-terracotta-800 transition shrink-0" title="Upload Photo">
+                    <i class="fa-solid fa-camera"></i>
+                </button>
+            </div>
+
+            <!-- Feed Filter Tags -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar text-xs font-bold">
+                <button onclick="filterFeed('all', this)" class="feed-filter-btn px-4 py-2 rounded-xl bg-terracotta-700 text-white shadow-xs">All Updates</button>
+                <button onclick="filterFeed('moment', this)" class="feed-filter-btn px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-amberWarm-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300">📸 Family Moments</button>
+                <button onclick="filterFeed('recipe', this)" class="feed-filter-btn px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-amberWarm-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300">🍲 Recipe Ideas</button>
+                <button onclick="filterFeed('news', this)" class="feed-filter-btn px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-amberWarm-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300">📢 Kitchen News</button>
+            </div>
+
+            <!-- Newsfeed Stream Cards -->
+            <div id="feedStream" class="space-y-6">
+                <!-- Dynamic post cards rendered via JavaScript -->
+            </div>
+        </section>
+
+
+        <!-- ================= TAB 2: MENU & DISH CATALOG ================= -->
+        <section id="tab-content-menu" class="tab-view hidden space-y-6">
+            
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-zinc-900 p-4 rounded-3xl border border-amberWarm-200 dark:border-zinc-800 shadow-xs">
+                <div>
+                    <h3 class="serif-title font-extrabold text-xl text-zinc-900 dark:text-white">Lutong Bahay Dish Catalog</h3>
+                    <p class="text-xs text-zinc-500">Check availability based on live pantry inventory before cooking!</p>
+                </div>
+
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <label class="flex items-center gap-2 cursor-pointer bg-amberWarm-100 dark:bg-zinc-800 px-3 py-2 rounded-xl text-xs font-bold text-zinc-800 dark:text-zinc-200">
+                        <input type="checkbox" id="cookableFilter" onchange="renderDishes()" class="accent-terracotta-600 w-4 h-4 rounded">
+                        <span><i class="fa-solid fa-fire-burner text-terracotta-600"></i> Cookable Now Only</span>
+                    </label>
+
+                    <button onclick="openAddDishModal()" class="px-4 py-2 rounded-xl bg-terracotta-700 hover:bg-terracotta-800 text-white text-xs font-bold shadow-md shrink-0">
+                        + Add New Dish
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dishes Grid -->
+            <div id="dishesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Rendered by JS -->
+            </div>
+        </section>
+
+
+        <!-- ================= TAB 3: PANTRY INVENTORY ================= -->
+        <section id="tab-content-pantry" class="tab-view hidden space-y-6">
+            <div class="bg-white dark:bg-zinc-900 p-6 rounded-3xl border border-amberWarm-200 dark:border-zinc-800 shadow-xs space-y-4">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="serif-title text-xl font-extrabold text-zinc-900 dark:text-white">Pantry Stock Tracker</h3>
+                        <p class="text-xs text-zinc-500">Manage ingredients and auto-compile grocery shopping lists.</p>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button onclick="openAddPantryModal()" class="px-4 py-2 rounded-xl bg-emeraldLeaf-600 text-white text-xs font-bold shadow-xs">
+                            + Add Stock Item
+                        </button>
+                        <button onclick="copyShoppingList()" class="px-4 py-2 rounded-xl bg-terracotta-700 text-white text-xs font-bold shadow-xs">
+                            <i class="fa-solid fa-copy mr-1"></i> Copy Shopping List
+                        </button>
+                    </div>
+                </div>
+
+                <div id="pantryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= TAB 4: COOKING LOG ================= -->
+        <section id="tab-content-log" class="tab-view hidden space-y-6 max-w-4xl mx-auto">
+            <div class="bg-white dark:bg-zinc-900 p-6 rounded-3xl border border-amberWarm-200 dark:border-zinc-800 shadow-xs space-y-4">
+                <div>
+                    <h3 class="serif-title text-xl font-extrabold text-zinc-900 dark:text-white">Daily Household Cooking Log</h3>
+                    <p class="text-xs text-zinc-500">History of meals prepared. Use "Undo Cook" to restore auto-deducted pantry items.</p>
+                </div>
+
+                <div id="logList" class="space-y-3 pt-2">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    
+    <!-- MODAL 1: CREATE NEW FAMILY MOMENT / POST -->
+    <div id="postModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+        <div class="bg-white dark:bg-zinc-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-amberWarm-200 dark:border-zinc-800 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-amberWarm-200 dark:border-zinc-800">
+                <h3 class="serif-title text-xl font-extrabold text-terracotta-800 dark:text-terracotta-500">Share Family Moment or News</h3>
+                <button onclick="closePostModal()" class="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form onsubmit="submitPost(event)" class="space-y-4 text-xs sm:text-sm">
+                <div>
+                    <label class="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">Update Category</label>
+                    <select id="postCategory" class="w-full px-3.5 py-2.5 rounded-xl border border-amberWarm-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+                        <option value="moment">📸 Family Moment / Photo</option>
+                        <option value="recipe">🍲 Recipe Idea</option>
+                        <option value="news">📢 Kitchen News</option>
+                        <option value="grocery">🛒 Grocery Alert</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">Caption / Message *</label>
+                    <textarea id="postText" rows="3" required placeholder="What's happening in the kitchen or with the family today?" class="w-full px-3.5 py-2.5 rounded-xl border border-amberWarm-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 focus:ring-2 focus:ring-terracotta-500 focus:outline-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">Attach Photo</label>
+                    <input type="file" id="postPhotoFile" accept="image/*" onchange="previewPostFile(this)" class="w-full px-3 py-2 rounded-xl border border-amberWarm-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs">
+                    <input type="text" id="postPhotoUrl" placeholder="Or paste photo URL..." class="w-full mt-2 px-3.5 py-2 rounded-xl border border-amberWarm-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs">
+                    
+                    <div id="postPreviewBox" class="mt-2 hidden h-40 rounded-2xl overflow-hidden bg-zinc-100">
+                        <img id="postPreviewImg" src="" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-3 border-t border-amberWarm-200 dark:border-zinc-800">
+                    <button type="button" onclick="closePostModal()" class="px-4 py-2.5 rounded-xl bg-amberWarm-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-bold">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-terracotta-700 hover:bg-terracotta-800 text-white font-bold shadow-md">
+                        Publish Moment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: ADD NEW DISH -->
+    <div id="addDishModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+        <div class="bg-white dark:bg-zinc-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-amberWarm-200 dark:border-zinc-800 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-3 border-b border-amberWarm-200 dark:border-zinc-800">
+                <h3 class="serif-title text-xl font-extrabold text-terracotta-800 dark:text-terracotta-500">Add New Dish</h3>
+                <button onclick="closeAddDishModal()" class="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form onsubmit="saveNewDish(event)" class="space-y-4 text-xs sm:text-sm">
+                <div>
+                    <label class="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">Dish Name *</label>
+                    <input type="text" id="dishTitle" required placeholder="e.g. Tokwa't Baboy Adobo" class="w-full px-3.5 py-2.5 rounded-xl border border-amberWarm-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">Mealtime</label>
+                        <select id="dishMeal" class="w-full px-3.5 py-2.5 rounded-xl border border-amberWarm-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+                            <option value="breakfast">Agahan (Breakfast)</option>
+                            <option value="lunch">Tanghalian (Lunch)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">Category Badge</label>
+                        <input type="text" id="dishBadge" placeholder="⭐ Kid Favorite" class="w-full px-3.5 py-2.5 rounded-xl border border-amberWarm-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">Dish Photo</label>
+                    <input type="file" id="dishPhotoFile" accept="image/*" onchange="previewDishFile(this)" class="w-full px-3 py-2 rounded-xl border border-amberWarm-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs">
+                    <input type="text" id="dishPhotoUrl" placeholder="Or paste photo URL..." class="w-full mt-2 px-3.5 py-2 rounded-xl border border-amberWarm-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">Description</label>
+                    <textarea id="dishDesc" rows="2" placeholder="Delicious home-cooked description..." class="w-full px-3.5 py-2.5 rounded-xl border border-amberWarm-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-3 border-t border-amberWarm-200 dark:border-zinc-800">
+                    <button type="button" onclick="closeAddDishModal()" class="px-4 py-2.5 rounded-xl bg-amberWarm-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-bold">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-terracotta-700 hover:bg-terracotta-800 text-white font-bold shadow-md">
+                        Save Recipe
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: ACCOUNT & HOUSEHOLD CODE -->
+    <div id="accountModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+        <div class="bg-white dark:bg-zinc-900 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-amberWarm-200 dark:border-zinc-800 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-amberWarm-200 dark:border-zinc-800">
+                <h3 class="serif-title text-lg font-extrabold text-terracotta-800 dark:text-terracotta-500">Family Account &amp; Sync</h3>
+                <button onclick="closeAccountModal()" class="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 text-xs sm:text-sm">
+                <div>
+                    <label class="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">Your Name</label>
+                    <input type="text" id="accName" placeholder="e.g. Mama Maria, Kuya Juan" class="w-full px-3.5 py-2.5 rounded-xl border border-amberWarm-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-bold">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">Household Sync Code / Family ID</label>
+                    <input type="text" id="accHousehold" placeholder="FAMILY-DELACRUZ-2026" class="w-full px-3.5 py-2.5 rounded-xl border border-amberWarm-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-mono font-bold uppercase">
+                    <p class="text-[11px] text-zinc-500 mt-1">Share this code with family members so everyone sees the exact same moment posts and kitchen stock!</p>
+                </div>
+
+                <button onclick="saveAccountInfo()" class="w-full py-2.5 rounded-xl bg-terracotta-700 text-white font-bold text-xs shadow-md">
+                    Update Account &amp; Sync
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: QR CODE FLYER -->
+    <div id="qrModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+        <div class="bg-white dark:bg-zinc-900 rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border border-amberWarm-200 dark:border-zinc-800 space-y-4">
+            <h3 class="serif-title text-xl font-extrabold text-terracotta-800">Scan Family Kitchen Menu</h3>
+            <p class="text-xs text-zinc-500">Scan this QR code with any phone camera at home to connect!</p>
+            
+            <div class="flex justify-center p-4 bg-amberWarm-50 rounded-2xl border border-amberWarm-200">
+                <div id="qrcode"></div>
+            </div>
+
+            <button onclick="closeQRModal()" class="w-full py-2.5 rounded-xl bg-zinc-800 text-white font-bold text-xs">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // --- APP STATE & INITIAL DATA ---
+        let appState = {
+            currentUser: localStorage.getItem('lutong_username') || 'Mama Maria',
+            householdId: localStorage.getItem('lutong_household') || 'FAMILY-DELACRUZ-2026',
+            posts: JSON.parse(localStorage.getItem('lutong_posts_v2')) || [
+                {
+                    id: 'p1',
+                    author: 'Mama Maria',
+                    category: 'moment',
+                    text: 'Cooked fresh Pork Sinigang with Gabi and green chilis for Sunday family lunch! 🍲❤️',
+                    photo: 'Creamy Pork & Gabi Stew with Greens.jpeg',
+                    timestamp: 'Today at 12:30 PM',
+                    likes: 4,
+                    comments: [
+                        { author: 'Kuya Juan', text: 'Sobrang sarap ng sabaw Mama!' }
+                    ]
+                },
+                {
+                    id: 'p2',
+                    author: 'Kuya Juan',
+                    category: 'grocery',
+                    text: 'Bought fresh kangkong, sayote, and eggs from the market! Stock in pantry updated. 🥬 eggs',
+                    photo: 'Crispy Dilis, Fried Egg & Sliced Fresh Kamatis.jpeg',
+                    timestamp: 'Yesterday at 9:15 AM',
+                    likes: 2,
+                    comments: []
+                }
+            ],
+            pantry: JSON.parse(localStorage.getItem('lutong_pantry_v2')) || [
+                { id: '1', name: 'Pork Chunks / Slices', qty: 1000, unit: 'g', threshold: 300 },
+                { id: '2', name: 'Pork Giniling', qty: 600, unit: 'g', threshold: 200 },
+                { id: '3', name: 'Fish Fillets', qty: 500, unit: 'g', threshold: 200 },
+                { id: '4', name: 'Eggs', qty: 12, unit: 'pcs', threshold: 4 },
+                { id: '5', name: 'Firm Tokwa', qty: 6, unit: 'pcs', threshold: 2 },
+                { id: '6', name: 'Dilis', qty: 300, unit: 'g', threshold: 100 },
+                { id: '7', name: 'Sayote Squash', qty: 4, unit: 'pcs', threshold: 1 },
+                { id: '8', name: 'Kangkong', qty: 3, unit: 'tali', threshold: 1 },
+                { id: '9', name: 'Gabi Root', qty: 400, unit: 'g', threshold: 150 }
+            ],
+            dishes: JSON.parse(localStorage.getItem('lutong_dishes_v2')) || [
+                {
+                    id: 'd1',
+                    title: 'Creamy Pork & Gabi Stew with Greens',
+                    meal: 'lunch',
+                    badge: '🥣 Warm Soup',
+                    photo: 'Creamy Pork & Gabi Stew with Greens.jpeg',
+                    desc: 'Rich, sour pork tamarind soup with gabi, kangkong, and green chilis.',
+                    req: { 'Pork Chunks / Slices': 250, 'Gabi Root': 150, 'Kangkong': 1 }
+                },
+                {
+                    id: 'd2',
+                    title: 'Crispy Dilis, Fried Egg & Fresh Kamatis',
+                    meal: 'breakfast',
+                    badge: '🍳 Egg Winner',
+                    photo: 'Crispy Dilis, Fried Egg & Sliced Fresh Kamatis.jpeg',
+                    desc: 'Crunchy fried dilis served with a sunny-side egg and tomatoes.',
+                    req: { 'Dilis': 50, 'Eggs': 1 }
+                },
+                {
+                    id: 'd3',
+                    title: 'Ginisang Sayote with Giniling & Bell Peppers',
+                    meal: 'lunch',
+                    badge: '🥦 Green Power',
+                    photo: 'Ginisang Sayote with Giniling & Bell Peppers.jpeg',
+                    desc: 'Sautéed chayote squash with minced pork and scrambled eggs.',
+                    req: { 'Sayote Squash': 2, 'Pork Giniling': 200, 'Eggs': 1 }
+                }
+            ],
+            logs: JSON.parse(localStorage.getItem('lutong_logs_v2')) || []
+        };
+
+        function saveData() {
+            localStorage.setItem('lutong_username', appState.currentUser);
+            localStorage.setItem('lutong_household', appState.householdId);
+            localStorage.setItem('lutong_posts_v2', JSON.stringify(appState.posts));
+            localStorage.setItem('lutong_pantry_v2', JSON.stringify(appState.pantry));
+            localStorage.setItem('lutong_dishes_v2', JSON.stringify(appState.dishes));
+            localStorage.setItem('lutong_logs_v2', JSON.stringify(appState.logs));
+        }
+
+        // --- NAVIGATION ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = 'nav-btn flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-amberWarm-200 dark:border-zinc-700 hover:border-terracotta-500 shrink-0';
+            });
+
+            document.getElementById(`tab-content-${tabId}`)?.classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) {
+                activeNav.className = 'nav-btn flex items-center gap-2 px-4 py-2 rounded-xl bg-terracotta-700 text-white shadow-xs shrink-0';
+            }
+
+            renderAll();
+        }
+
+        function renderAll() {
+            document.getElementById('householdBadge').textContent = appState.householdId;
+            document.getElementById('userNameDisplay').textContent = appState.currentUser;
+            document.getElementById('userAvatar').textContent = appState.currentUser.charAt(0).toUpperCase();
+            document.getElementById('quickAvatar').textContent = appState.currentUser.charAt(0).toUpperCase();
+
+            renderFeed();
+            renderDishes();
+            renderPantry();
+            renderLogs();
+        }
+
+        // --- 1. NEWSFEED DASHBOARD ---
+        let feedFilter = 'all';
+
+        function filterFeed(cat, btn) {
+            feedFilter = cat;
+            document.querySelectorAll('.feed-filter-btn').forEach(b => {
+                b.className = 'feed-filter-btn px-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-amberWarm-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300';
+            });
+            btn.className = 'feed-filter-btn px-4 py-2 rounded-xl bg-terracotta-700 text-white shadow-xs';
+            renderFeed();
+        }
+
+        function renderFeed() {
+            const container = document.getElementById('feedStream');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const posts = appState.posts.filter(p => feedFilter === 'all' || p.category === feedFilter);
+
+            posts.forEach(post => {
+                const card = document.createElement('div');
+                card.className = 'bg-white dark:bg-zinc-900 rounded-3xl p-5 border border-amberWarm-200 dark:border-zinc-800 shadow-sm space-y-4';
+                
+                let catBadge = '📸 Family Moment';
+                if (post.category === 'recipe') catBadge = '🍲 Recipe Idea';
+                if (post.category === 'news') catBadge = '📢 Kitchen News';
+                if (post.category === 'grocery') catBadge = '🛒 Grocery Alert';
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-2xl bg-terracotta-700 text-white font-extrabold flex items-center justify-center text-sm shadow-xs">
+                                ${post.author.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm text-zinc-900 dark:text-white">${post.author}</h4>
+                                <span class="text-[10px] text-zinc-400">${post.timestamp}</span>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-[10px] font-extrabold bg-amberWarm-100 dark:bg-zinc-800 text-terracotta-800 dark:text-terracotta-400">
+                            ${catBadge}
+                        </span>
+                    </div>
+
+                    <p class="text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 leading-relaxed font-medium">
+                        ${post.text}
+                    </p>
+
+                    ${post.photo ? `
+                        <div class="rounded-2xl overflow-hidden max-h-80 bg-zinc-100 dark:bg-zinc-800">
+                            <img src="${post.photo}" class="w-full h-full object-cover">
+                        </div>
+                    ` : ''}
+
+                    <div class="flex items-center justify-between pt-2 border-t border-amberWarm-100 dark:border-zinc-800 text-xs">
+                        <button onclick="likePost('${post.id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-amberWarm-100 text-terracotta-700 font-bold">
+                            <i class="fa-solid fa-heart"></i>
+                            <span>${post.likes || 0} Likes</span>
+                        </button>
+                        <span class="text-[10px] text-zinc-400 font-mono">${post.comments ? post.comments.length : 0} Comments</span>
+                    </div>
+
+                    <!-- Comments List -->
+                    <div class="space-y-2 pt-2 border-t border-zinc-100 dark:border-zinc-800">
+                        ${(post.comments || []).map(c => `
+                            <div class="bg-amberWarm-50/80 dark:bg-zinc-800/60 p-2.5 rounded-xl text-xs">
+                                <span class="font-bold text-terracotta-800 dark:text-terracotta-400">${c.author}:</span>
+                                <span class="text-zinc-700 dark:text-zinc-300">${c.text}</span>
+                            </div>
+                        `).join('')}
+
+                        <div class="flex gap-2 pt-1">
+                            <input type="text" id="commentInput-${post.id}" placeholder="Write a family comment..." class="w-full px-3 py-1.5 rounded-xl border border-amberWarm-200 dark:border-zinc-700 text-xs bg-white dark:bg-zinc-800">
+                            <button onclick="addComment('${post.id}')" class="px-3 py-1.5 bg-terracotta-700 text-white rounded-xl text-xs font-bold">Send</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        let tempPostPhoto = '';
+        function previewPostFile(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    tempPostPhoto = e.target.result;
+                    document.getElementById('postPreviewImg').src = tempPostPhoto;
+                    document.getElementById('postPreviewBox').classList.remove('hidden');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function openPostModal() {
+            tempPostPhoto = '';
+            document.getElementById('postText').value = '';
+            document.getElementById('postPhotoUrl').value = '';
+            document.getElementById('postPreviewBox').classList.add('hidden');
+            document.getElementById('postModal').classList.remove('hidden');
+        }
+
+        function closePostModal() {
+            document.getElementById('postModal').classList.add('hidden');
+        }
+
+        function submitPost(e) {
+            e.preventDefault();
+            const text = document.getElementById('postText').value.trim();
+            const url = document.getElementById('postPhotoUrl').value.trim();
+            const category = document.getElementById('postCategory').value;
+
+            const photo = tempPostPhoto || url || '';
+
+            const newPost = {
+                id: 'post_' + Date.now(),
+                author: appState.currentUser,
+                category,
+                text,
+                photo,
+                timestamp: 'Just now',
+                likes: 0,
+                comments: []
+            };
+
+            appState.posts.unshift(newPost);
+            saveData();
+            closePostModal();
+            renderFeed();
+        }
+
+        function likePost(id) {
+            const p = appState.posts.find(item => item.id === id);
+            if (p) {
+                p.likes = (p.likes || 0) + 1;
+                saveData();
+                renderFeed();
+            }
+        }
+
+        function addComment(id) {
+            const input = document.getElementById(`commentInput-${id}`);
+            if (!input || !input.value.trim()) return;
+
+            const p = appState.posts.find(item => item.id === id);
+            if (p) {
+                if (!p.comments) p.comments = [];
+                p.comments.push({
+                    author: appState.currentUser,
+                    text: input.value.trim()
+                });
+                saveData();
+                renderFeed();
+            }
+        }
+
+        // --- 2. MENU & DISHES ---
+        function checkCookable(dish) {
+            const req = dish.req || {};
+            for (const [ing, reqQty] of Object.entries(req)) {
+                const item = appState.pantry.find(p => p.name.toLowerCase() === ing.toLowerCase());
+                if (!item || item.qty < reqQty) return false;
+            }
+            return true;
+        }
+
+        function renderDishes() {
+            const grid = document.getElementById('dishesGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const cookableOnly = document.getElementById('cookableFilter')?.checked || false;
+
+            appState.dishes.forEach(dish => {
+                const canCook = checkCookable(dish);
+                if (cookableOnly && !canCook) return;
+
+                const card = document.createElement('div');
+                card.className = 'bg-white dark:bg-zinc-900 rounded-3xl overflow-hidden border border-amberWarm-200 dark:border-zinc-800 shadow-xs flex flex-col justify-between';
+
+                card.innerHTML = `
+                    <div>
+                        <div class="relative h-48 bg-zinc-100 overflow-hidden">
+                            <img src="${dish.photo}" class="w-full h-full object-cover">
+                            <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-extrabold ${canCook ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'}">
+                                ${canCook ? 'Ready to Cook' : 'Missing Items'}
+                            </span>
+                            <span class="absolute bottom-3 left-3 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-black/60 text-white">
+                                ${dish.badge || '⭐ Favorite'}
+                            </span>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <h4 class="font-bold text-base text-zinc-900 dark:text-white">${dish.title}</h4>
+                            <p class="text-xs text-zinc-500">${dish.desc}</p>
+                        </div>
+                    </div>
+                    <div class="p-4 pt-0 flex gap-2">
+                        <button onclick="cookDish('${dish.id}')" class="flex-1 py-2 bg-terracotta-700 text-white rounded-xl text-xs font-bold hover:bg-terracotta-800">
+                            <i class="fa-solid fa-fire-burner mr-1"></i> Cook Today
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openAddDishModal() {
+            document.getElementById('addDishModal').classList.remove('hidden');
+        }
+
+        function closeAddDishModal() {
+            document.getElementById('addDishModal').classList.add('hidden');
+        }
+
+        let tempDishPhoto = '';
+        function previewDishFile(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) { tempDishPhoto = e.target.result; };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function saveNewDish(e) {
+            e.preventDefault();
+            const title = document.getElementById('dishTitle').value.trim();
+            const meal = document.getElementById('dishMeal').value;
+            const badge = document.getElementById('dishBadge').value.trim();
+            const photoUrl = document.getElementById('dishPhotoUrl').value.trim();
+            const desc = document.getElementById('dishDesc').value.trim();
+
+            const newDish = {
+                id: 'd_' + Date.now(),
+                title,
+                meal,
+                badge: badge || '⭐ Favorite',
+                photo: tempDishPhoto || photoUrl || 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=80',
+                desc,
+                req: {}
+            };
+
+            appState.dishes.unshift(newDish);
+            saveData();
+            closeAddDishModal();
+            renderDishes();
+        }
+
+        function cookDish(id) {
+            const dish = appState.dishes.find(d => d.id === id);
+            if (!dish) return;
+
+            // Log
+            appState.logs.unshift({
+                id: 'log_' + Date.now(),
+                title: dish.title,
+                author: appState.currentUser,
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+
+            saveData();
+            alert(`Cooked ${dish.title}! Added to daily cooking log.`);
+            renderLogs();
+        }
+
+        // --- 3. PANTRY ---
+        function renderPantry() {
+            const grid = document.getElementById('pantryGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            appState.pantry.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'p-4 rounded-2xl border border-amberWarm-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex justify-between items-center';
+                card.innerHTML = `
+                    <div>
+                        <h4 class="font-bold text-sm text-zinc-900 dark:text-white">${item.name}</h4>
+                        <p class="text-xs text-terracotta-700 font-extrabold">${item.qty} ${item.unit}</p>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="adjustPantry('${item.id}', -1)" class="w-8 h-8 rounded-lg bg-amberWarm-100 font-bold">-</button>
+                        <button onclick="adjustPantry('${item.id}', 1)" class="w-8 h-8 rounded-lg bg-amberWarm-100 font-bold">+</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function adjustPantry(id, delta) {
+            const p = appState.pantry.find(item => item.id === id);
+            if (p) {
+                p.qty = Math.max(0, p.qty + delta);
+                saveData();
+                renderPantry();
+                renderDishes();
+            }
+        }
+
+        function copyShoppingList() {
+            const text = "🛒 Household Grocery List:\n" + appState.pantry.filter(p => p.qty <= p.threshold).map(p => `- ${p.name}`).join('\n');
+            const temp = document.createElement('textarea');
+            temp.value = text;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            alert("Shopping list copied!");
+        }
+
+        // --- 4. COOKING LOG ---
+        function renderLogs() {
+            const list = document.getElementById('logList');
+            if (!list) return;
+            list.innerHTML = '';
+
+            if (appState.logs.length === 0) {
+                list.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">No dishes cooked yet today.</p>`;
+                return;
+            }
+
+            appState.logs.forEach(log => {
+                const row = document.createElement('div');
+                row.className = 'p-3 rounded-2xl bg-amberWarm-50 dark:bg-zinc-800 flex justify-between items-center text-xs';
+                row.innerHTML = `
+                    <div>
+                        <span class="font-bold text-zinc-900 dark:text-white">${log.title}</span>
+                        <p class="text-[10px] text-zinc-400">Cooked by ${log.author} at ${log.timestamp}</p>
+                    </div>
+                    <span class="px-2 py-1 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">Cooked</span>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        // --- ACCOUNT MODAL ---
+        function openAccountModal() {
+            document.getElementById('accName').value = appState.currentUser;
+            document.getElementById('accHousehold').value = appState.householdId;
+            document.getElementById('accountModal').classList.remove('hidden');
+        }
+
+        function closeAccountModal() {
+            document.getElementById('accountModal').classList.add('hidden');
+        }
+
+        function saveAccountInfo() {
+            appState.currentUser = document.getElementById('accName').value.trim() || 'Family Member';
+            appState.householdId = document.getElementById('accHousehold').value.trim() || 'FAMILY-DELACRUZ-2026';
+            saveData();
+            closeAccountModal();
+            renderAll();
+        }
+
+        // --- QR MODAL ---
+        function openQRModal() {
+            document.getElementById('qrModal').classList.remove('hidden');
+            const container = document.getElementById('qrcode');
+            container.innerHTML = '';
+            new QRCode(container, {
+                text: window.location.href,
+                width: 140,
+                height: 140,
+                colorDark: "#9a3412"
+            });
+        }
+
+        function closeQRModal() {
+            document.getElementById('qrModal').classList.add('hidden');
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAll();
+        });
+    </script>
+</body>
+</html>
