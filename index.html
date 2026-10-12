@@ -256,14 +256,14 @@
         <button onclick="closeProfileModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
       <div class="flex flex-col items-center space-y-3">
-        <div class="relative w-20 h-20">
-          <img id="profileModalAvatarPreview" src="" class="w-20 h-20 rounded-full object-cover border-2 border-amber-500 shadow-md">
-          <label class="absolute bottom-0 right-0 bg-amber-600 hover:bg-amber-700 text-white w-7 h-7 rounded-full flex items-center justify-center cursor-pointer shadow-md">
+        <div class="relative w-24 h-24">
+          <img id="profileModalAvatarPreview" src="" class="w-24 h-24 rounded-full object-cover border-2 border-amber-500 shadow-md">
+          <label class="absolute bottom-0 right-0 bg-amber-600 hover:bg-amber-700 text-white w-8 h-8 rounded-full flex items-center justify-center cursor-pointer shadow-md transition">
             <i class="fa-solid fa-camera text-xs"></i>
             <input type="file" id="profileAvatarFileInput" accept="image/*" class="hidden" onchange="handleProfileAvatarSelect(event)">
           </label>
         </div>
-        <p class="text-xs text-slate-400">Tap camera icon to upload profile photo</p>
+        <p class="text-xs text-slate-400 text-center">Tap camera icon to change your profile picture</p>
       </div>
       <div class="space-y-3">
         <div>
@@ -275,7 +275,7 @@
           <input type="text" id="profileHouseholdInput" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold uppercase">
         </div>
       </div>
-      <button onclick="saveProfileSettings()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-xl text-sm transition">
+      <button onclick="saveProfileSettings()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-xs">
         Save Profile
       </button>
     </div>
@@ -355,6 +355,7 @@
     let editingDishId = null;
     let tempPostImage = null;
     let tempDishImage = null;
+    let tempProfileAvatar = null;
 
     window.addEventListener('DOMContentLoaded', () => {
       syncUserUI();
@@ -369,6 +370,32 @@
       document.getElementById('userAvatarHeader').src = currentUser.avatar;
       document.getElementById('userAvatarPostBox').src = currentUser.avatar;
       document.getElementById('headerHouseholdSub').innerText = `Household ID: ${currentUser.household}`;
+    }
+
+    // Image Compressor Function (Fixes LocalStorage Limit Issue)
+    function compressImage(file, maxWidth, quality, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          callback(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
     }
 
     function switchTab(tab) {
@@ -472,14 +499,12 @@
     function handleNewDishFileSelect(event) {
       const file = event.target.files[0];
       if(file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          tempDishImage = e.target.result;
-          document.getElementById('newDishPhotoPreview').src = tempDishImage;
+        compressImage(file, 600, 0.75, function(compressedUrl) {
+          tempDishImage = compressedUrl;
+          document.getElementById('newDishPhotoPreview').src = compressedUrl;
           document.getElementById('newDishPhotoPreview').classList.remove('hidden');
           document.getElementById('newDishPhotoIcon').classList.add('hidden');
-        };
-        reader.readAsDataURL(file);
+        });
       }
     }
 
@@ -506,29 +531,13 @@
       const img = tempDishImage || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80";
 
       if(editingDishId) {
-        // Update Existing Dish
         const dishIndex = dishes.findIndex(d => d.id === editingDishId);
         if(dishIndex !== -1) {
-          dishes[dishIndex] = {
-            ...dishes[dishIndex],
-            title: title,
-            mealtime: mealtime,
-            badge: badge,
-            desc: desc,
-            img: img
-          };
+          dishes[dishIndex] = { ...dishes[dishIndex], title, mealtime, badge, desc, img };
           alert(`Updated photo and details for "${title}"!`);
         }
       } else {
-        // Create New Dish
-        const newDishObj = {
-          id: Date.now(),
-          title: title,
-          mealtime: mealtime,
-          badge: badge,
-          desc: desc,
-          img: img
-        };
+        const newDishObj = { id: Date.now(), title, mealtime, badge, desc, img };
         dishes.unshift(newDishObj);
         alert(`"${title}" added to your family menu!`);
       }
@@ -687,13 +696,11 @@
     function handlePostImageSelect(event) {
       const file = event.target.files[0];
       if(file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          tempPostImage = e.target.result;
-          document.getElementById('postImagePreview').src = tempPostImage;
+        compressImage(file, 800, 0.8, function(compressedUrl) {
+          tempPostImage = compressedUrl;
+          document.getElementById('postImagePreview').src = compressedUrl;
           document.getElementById('postImagePreviewContainer').classList.remove('hidden');
-        };
-        reader.readAsDataURL(file);
+        });
       }
     }
 
@@ -760,6 +767,7 @@
       document.getElementById('profileNameInput').value = currentUser.name;
       document.getElementById('profileHouseholdInput').value = currentUser.household;
       document.getElementById('profileModalAvatarPreview').src = currentUser.avatar;
+      tempProfileAvatar = currentUser.avatar;
       document.getElementById('profileModal').classList.remove('hidden');
     }
 
@@ -767,25 +775,30 @@
       document.getElementById('profileModal').classList.add('hidden');
     }
 
+    // Profile Photo File Upload Handler with Auto-Compress
     function handleProfileAvatarSelect(event) {
       const file = event.target.files[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById('profileModalAvatarPreview').src = e.target.result;
-        };
-        reader.readAsDataURL(file);
+        compressImage(file, 250, 0.8, function(compressedAvatarUrl) {
+          tempProfileAvatar = compressedAvatarUrl;
+          document.getElementById('profileModalAvatarPreview').src = compressedAvatarUrl;
+        });
       }
     }
 
     function saveProfileSettings() {
-      currentUser.name = document.getElementById('profileNameInput').value || "Dwight D'Angelo";
-      currentUser.household = document.getElementById('profileHouseholdInput').value || "DANGELO-HOME";
-      currentUser.avatar = document.getElementById('profileModalAvatarPreview').src;
+      currentUser.name = document.getElementById('profileNameInput').value.trim() || "Dwight D'Angelo";
+      currentUser.household = document.getElementById('profileHouseholdInput').value.trim() || "DANGELO-HOME";
+      currentUser.avatar = tempProfileAvatar || currentUser.avatar;
 
-      localStorage.setItem('dangelo_user', JSON.stringify(currentUser));
-      syncUserUI();
-      closeProfileModal();
+      try {
+        localStorage.setItem('dangelo_user', JSON.stringify(currentUser));
+        syncUserUI();
+        closeProfileModal();
+        alert("Profile saved successfully!");
+      } catch (e) {
+        alert("Storage error: The selected profile photo is too large. Please select a smaller photo.");
+      }
     }
 
     function openQRModal() {
