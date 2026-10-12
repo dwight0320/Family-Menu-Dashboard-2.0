@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D'Angelo Family Household - Lutong Bahay Menu & Moments</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-amber-50/40 text-slate-800 min-h-screen">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-amber-100 shadow-xs">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('feed')">
+        <span class="text-3xl">🍲</span>
+        <div>
+          <h1 class="text-xl font-extrabold text-amber-900 leading-tight">D'Angelo Family Household</h1>
+          <p class="text-xs font-semibold text-amber-600" id="headerHouseholdSub">Household ID: DANGELO-HOME</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button onclick="openProfileModal()" class="flex items-center space-x-2 bg-amber-50 hover:bg-amber-100/80 border border-amber-200/80 px-3 py-1.5 rounded-full transition">
+          <img id="userAvatarHeader" src="https://api.dicebear.com/7.x/bottts/svg?seed=Dwight" alt="Profile" class="w-7 h-7 rounded-full object-cover border border-amber-300">
+          <span id="userNameHeader" class="text-xs font-bold text-amber-900">Dwight</span>
+          <i class="fa-solid fa-gear text-amber-600 text-xs ml-1"></i>
+        </button>
+        <button onclick="openQRModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 shadow-xs">
+          <i class="fa-solid fa-qrcode"></i>
+          <span class="hidden sm:inline">QR Scan</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="max-w-6xl mx-auto px-4 pt-1 pb-2 flex overflow-x-auto space-x-2 no-scrollbar border-t border-slate-100/80">
+      <button onclick="switchTab('feed')" id="nav-feed" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap bg-amber-600 text-white">
+        <i class="fa-solid fa-newspaper"></i> <span>Family News & Moments</span>
+      </button>
+      <button onclick="switchTab('dishes')" id="nav-dishes" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-amber-100/50">
+        <i class="fa-solid fa-utensils"></i> <span>Menu & Dishes</span>
+      </button>
+      <button onclick="switchTab('pantry')" id="nav-pantry" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-amber-100/50">
+        <i class="fa-solid fa-boxes-stacked"></i> <span>Pantry Tracker</span>
+      </button>
+      <button onclick="switchTab('shopping')" id="nav-shopping" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-amber-100/50">
+        <i class="fa-solid fa-cart-shopping"></i> <span>Shopping List</span>
+      </button>
+      <button onclick="switchTab('log')" id="nav-log" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-amber-100/50">
+        <i class="fa-solid fa-clock-rotate-left"></i> <span>Cooking Log</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main View -->
+  <main class="max-w-6xl mx-auto px-4 py-6">
+
+    <!-- TAB 1: NEWS & MOMENTS -->
+    <section id="view-feed" class="space-y-6">
+      <div class="bg-white rounded-3xl p-5 border border-amber-100 shadow-xs">
+        <div class="flex items-start space-x-3">
+          <img id="userAvatarPostBox" src="https://api.dicebear.com/7.x/bottts/svg?seed=Dwight" class="w-10 h-10 rounded-full object-cover border border-amber-200">
+          <div class="flex-1 space-y-3">
+            <textarea id="postInputText" rows="2" placeholder="Share food updates, moments, or recipe ideas with D'Angelo Family..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"></textarea>
+            <div id="postImagePreviewContainer" class="hidden relative rounded-2xl overflow-hidden max-h-60 bg-slate-100">
+              <img id="postImagePreview" src="" class="w-full h-full object-cover">
+              <button onclick="removePostImage()" class="absolute top-2 right-2 bg-slate-900/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div class="flex items-center justify-between pt-1">
+              <label class="cursor-pointer text-amber-700 hover:text-amber-800 text-xs font-bold flex items-center space-x-1.5 bg-amber-50 px-3 py-2 rounded-xl border border-amber-200/60">
+                <i class="fa-solid fa-image text-amber-600"></i>
+                <span>Add Photo</span>
+                <input type="file" id="postImageFileInput" accept="image/*" class="hidden" onchange="handlePostImageSelect(event)">
+              </label>
+              <button onclick="createNewPost()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-5 py-2 rounded-xl shadow-xs transition">
+                Publish Post
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="feedPostsContainer" class="space-y-6"></div>
+    </section>
+
+    <!-- TAB 2: MENU & DISHES -->
+    <section id="view-dishes" class="hidden space-y-6">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-amber-100 shadow-xs">
+        <div class="flex items-center space-x-2 bg-amber-50 p-1 rounded-xl">
+          <button onclick="setDishMealFilter('all')" id="dishFilter-all" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-600 text-white shadow-xs">All 22 Dishes</button>
+          <button onclick="setDishMealFilter('Agahan')" id="dishFilter-Agahan" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-amber-900">🌅 Agahan (13)</button>
+          <button onclick="setDishMealFilter('Tanghalian')" id="dishFilter-Tanghalian" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-amber-900">☀️ Tanghalian (9)</button>
+        </div>
+        <input type="text" id="dishSearchInput" oninput="renderDishes()" placeholder="Search dish name..." class="w-full sm:w-48 px-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500">
+      </div>
+      <div id="dishesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- TAB 3: PANTRY TRACKER -->
+    <section id="view-pantry" class="hidden space-y-6">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded-2xl border border-amber-100 shadow-xs">
+          <p class="text-xs font-bold text-slate-400">Total Items</p>
+          <p id="statTotalItems" class="text-2xl font-black text-slate-800">0</p>
+        </div>
+        <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-100 shadow-xs">
+          <p class="text-xs font-bold text-emerald-600">In Stock</p>
+          <p id="statInStock" class="text-2xl font-black text-emerald-800">0</p>
+        </div>
+        <div class="bg-amber-50 p-4 rounded-2xl border border-amber-100 shadow-xs">
+          <p class="text-xs font-bold text-amber-600">Low Stock</p>
+          <p id="statLowStock" class="text-2xl font-black text-amber-800">0</p>
+        </div>
+        <div class="bg-rose-50 p-4 rounded-2xl border border-rose-100 shadow-xs">
+          <p class="text-xs font-bold text-rose-600">Out of Stock</p>
+          <p id="statOutOfStock" class="text-2xl font-black text-rose-800">0</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-3xl p-6 border border-amber-100 space-y-4">
+        <h2 class="text-lg font-black text-slate-800">D'Angelo Family Pantry Inventory</h2>
+        <div id="pantryItemsContainer" class="divide-y divide-slate-100"></div>
+      </div>
+    </section>
+
+    <!-- TAB 4: SHOPPING LIST -->
+    <section id="view-shopping" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl p-6 border border-amber-100 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-black text-slate-800">Grocery Shopping List</h2>
+            <p class="text-xs text-slate-500">Auto-compiled from Low Stock & Out of Stock items</p>
+          </div>
+          <button onclick="copyShoppingList()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition flex items-center space-x-1.5">
+            <i class="fa-solid fa-copy"></i>
+            <span>Copy List</span>
+          </button>
+        </div>
+        <ul id="shoppingListContainer" class="space-y-2"></ul>
+      </div>
+    </section>
+
+    <!-- TAB 5: COOKING LOG -->
+    <section id="view-log" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl p-6 border border-amber-100 space-y-4">
+        <h2 class="text-lg font-black text-slate-800">D'Angelo Kitchen Cooking Log</h2>
+        <div id="cookingLogContainer" class="space-y-3"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- COOK DISH MODAL -->
+  <div id="cookModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 id="cookModalTitle" class="text-lg font-extrabold text-slate-800">Dish Title</h3>
+        <button onclick="closeCookModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <img id="cookModalImg" src="" class="w-full h-40 object-cover rounded-2xl">
+      <p id="cookModalDesc" class="text-xs text-slate-500"></p>
+
+      <div class="space-y-2 border-t border-slate-100 pt-3">
+        <label class="text-xs font-bold text-slate-700">Number of Servings:</label>
+        <input type="number" id="cookServingsInput" value="1" min="1" max="20" class="w-full p-2 text-sm bg-slate-50 border border-slate-200 rounded-xl font-bold text-center">
+      </div>
+
+      <div class="flex space-x-3 pt-2">
+        <button onclick="confirmCookDish()" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-xl text-xs transition">
+          Confirm & Deduct Ingredients
+        </button>
+        <button onclick="shareDishToFeed()" class="bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold px-3 py-2.5 rounded-xl text-xs transition border border-amber-200">
+          Share to Moments
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- USER PROFILE MODAL -->
+  <div id="profileModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-5 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-extrabold text-slate-800">Profile Settings</h3>
+        <button onclick="closeProfileModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <div class="flex flex-col items-center space-y-3">
+        <div class="relative w-20 h-20">
+          <img id="profileModalAvatarPreview" src="" class="w-20 h-20 rounded-full object-cover border-2 border-amber-500 shadow-md">
+          <label class="absolute bottom-0 right-0 bg-amber-600 hover:bg-amber-700 text-white w-7 h-7 rounded-full flex items-center justify-center cursor-pointer shadow-md">
+            <i class="fa-solid fa-camera text-xs"></i>
+            <input type="file" id="profileAvatarFileInput" accept="image/*" class="hidden" onchange="handleProfileAvatarSelect(event)">
+          </label>
+        </div>
+        <p class="text-xs text-slate-400">Tap camera icon to upload profile photo</p>
+      </div>
+      <div class="space-y-3">
+        <div>
+          <label class="text-xs font-bold text-slate-600">Your Name</label>
+          <input type="text" id="profileNameInput" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600">Household ID</label>
+          <input type="text" id="profileHouseholdInput" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold uppercase">
+        </div>
+      </div>
+      <button onclick="saveProfileSettings()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-xl text-sm transition">
+        Save Profile
+      </button>
+    </div>
+  </div>
+
+  <!-- QR MODAL -->
+  <div id="qrModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl space-y-4">
+      <h3 class="text-xl font-black text-slate-800">D'Angelo Household QR</h3>
+      <div id="qrcode" class="flex justify-center p-4 bg-amber-50 rounded-2xl border border-amber-100"></div>
+      <button onclick="closeQRModal()" class="w-full bg-slate-800 text-white font-bold py-2.5 rounded-xl text-sm">Close</button>
+    </div>
+  </div>
+
+  <!-- APPLICATION CODE -->
+  <script>
+    let currentUser = JSON.parse(localStorage.getItem('dangelo_user')) || {
+      name: 'Dwight D\'Angelo',
+      avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Dwight',
+      household: 'DANGELO-HOME'
+    };
+
+    let pantry = JSON.parse(localStorage.getItem('dangelo_pantry')) || [
+      { id: 1, name: 'Pork', qty: 1000, unit: 'g', lowThreshold: 300 },
+      { id: 2, name: 'Fish', qty: 800, unit: 'g', lowThreshold: 200 },
+      { id: 3, name: 'Egg', qty: 12, unit: 'pcs', lowThreshold: 4 },
+      { id: 4, name: 'Giniling (Ground Pork)', qty: 500, unit: 'g', lowThreshold: 200 },
+      { id: 5, name: 'Korean Spam', qty: 2, unit: 'pcs', lowThreshold: 1 },
+      { id: 6, name: 'Firm Tokwa', qty: 4, unit: 'pcs', lowThreshold: 1 },
+      { id: 7, name: 'Dilis', qty: 250, unit: 'g', lowThreshold: 50 },
+      { id: 8, name: 'Sayote', qty: 3, unit: 'pcs', lowThreshold: 1 },
+      { id: 9, name: 'Kangkong', qty: 2, unit: 'tali', lowThreshold: 1 },
+      { id: 10, name: 'Gabi', qty: 4, unit: 'pcs', lowThreshold: 1 },
+      { id: 11, name: 'Kamatis', qty: 6, unit: 'pcs', lowThreshold: 2 },
+      { id: 12, name: 'Kalamansi', qty: 10, unit: 'pcs', lowThreshold: 3 },
+      { id: 13, name: 'Saging Saba', qty: 5, unit: 'pcs', lowThreshold: 2 },
+      { id: 14, name: 'Potato', qty: 4, unit: 'pcs', lowThreshold: 1 },
+      { id: 15, name: 'Kamote', qty: 3, unit: 'pcs', lowThreshold: 1 },
+      { id: 16, name: 'Ginger', qty: 1, unit: 'pcs', lowThreshold: 1 },
+      { id: 17, name: 'Bell Pepper', qty: 2, unit: 'pcs', lowThreshold: 1 },
+      { id: 18, name: 'Mongo', qty: 300, unit: 'g', lowThreshold: 100 }
+    ];
+
+    let cookingLog = JSON.parse(localStorage.getItem('dangelo_log')) || [];
+
+    const all22Dishes = [
+      { id: 1, title: "Stir-Fried Tokwa & Kangkong in Soy-Kalamansi", mealtime: "Agahan", badge: "🌱 Healthy High-Protein", desc: "Crispy fried tofu and fresh kangkong stems tossed in garlic soy-kalamansi sauce.", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80", ingredients: [{ id: 6, req: 1 }, { id: 9, req: 1 }] },
+      { id: 2, title: "Spam & Kamote Kimchi-Style Stir-Fry", mealtime: "Agahan", badge: "🍳 Sweet & Savory", desc: "Crispy Korean Spam, sweet kamote cubes, onion, and eggs stir-fried together.", img: "Egg & Spam Breakfast-for-Dinner Scramble.jpeg", ingredients: [{ id: 5, req: 1 }, { id: 15, req: 1 }] },
+      { id: 3, title: "Potato & Kamote Tortang Giniling", mealtime: "Agahan", badge: "🍳 Egg Winner!", desc: "Savory egg omelet filled with spiced ground pork, potatoes, and sweet kamote.", img: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80", ingredients: [{ id: 4, req: 100 }, { id: 3, req: 2 }] },
+      { id: 4, title: "Crispy Dilis, Fried Egg & Sliced Fresh Kamatis", mealtime: "Agahan", badge: "🐟 Crunchy Silog", desc: "Light, satisfying fried dilis platter served with a sunny-side egg and sliced tomatoes.", img: "Crispy Dilis, Fried Egg & Sliced Fresh Kamatis.jpeg", ingredients: [{ id: 7, req: 50 }, { id: 3, req: 1 }, { id: 11, req: 1 }] },
+      { id: 5, title: "Sweet & Savory Spam & Kamote Hash", mealtime: "Agahan", badge: "🍟 Sweet & Crunchy", desc: "Pan-caramelized Spam cubes, sweet kamote, onions, and bell peppers.", img: "https://images.unsplash.com/photo-1584850125868-9a4c78bd8999?auto=format&fit=crop&w=600&q=80", ingredients: [{ id: 5, req: 1 }, { id: 15, req: 1 }] },
+      { id: 6, title: "Saging Saba & Dilis Sweet-Salty Combo", mealtime: "Agahan", badge: "🍌 Filo Classic", desc: "Boiled or sautéed saging saba slices served alongside crispy salted dilis.", img: "Crispy Dilis, Fried Egg & Sliced Fresh Kamatis.jpeg", ingredients: [{ id: 13, req: 2 }, { id: 7, req: 30 }] },
+      { id: 7, title: "Egg & Spam Breakfast-for-Dinner Scramble", mealtime: "Agahan", badge: "⭐ Quick & Tasty", desc: "Soft scrambled eggs with diced Korean Spam and bell peppers.", img: "Egg & Spam Breakfast-for-Dinner Scramble.jpeg", ingredients: [{ id: 3, req: 2 }, { id: 5, req: 1 }] },
+      { id: 8, title: "Fish & Kamote Fries Platter", mealtime: "Agahan", badge: "🍟 Healthy Fries", desc: "Pan-fried fish fillet served alongside golden crispy sweet potato wedges.", img: "Fish & Kamote Fries Platter.jpeg", ingredients: [{ id: 2, req: 200 }, { id: 15, req: 1 }] },
+      { id: 9, title: "Tokwa & Egg Stir-Fry with Kalamansi Drizzle", mealtime: "Agahan", badge: "🌱 High Protein", desc: "High-protein egg scramble with firm tofu cubes and fresh kalamansi citrus.", img: "Crispy Kamote & Tokwa Fritters.jpeg", ingredients: [{ id: 6, req: 1 }, { id: 3, req: 2 }] },
+      { id: 10, title: "Tortang Kangkong & Tokwa Patties", mealtime: "Agahan", badge: "🥞 Veggie Patty", desc: "Chopped greens and mashed tofu bound with egg and pan-fried into crispy patties.", img: "Crispy Kamote & Tokwa Fritters.jpeg", ingredients: [{ id: 9, req: 1 }, { id: 6, req: 1 }] },
+      { id: 11, title: "Sinangag, Crispy Tokwa & Sliced Tomato Salad", mealtime: "Agahan", badge: "🧄 Garlic Rice Combo", desc: "Garlic fried rice served with golden tofu blocks and fresh citrus tomato salad.", img: "Crispy Dilis, Fried Egg & Sliced Fresh Kamatis.jpeg", ingredients: [{ id: 6, req: 1 }, { id: 11, req: 2 }] },
+      { id: 12, title: "Crispy Kamote & Tokwa Fritters", mealtime: "Agahan", badge: "🍟 Crunchy Ukoy Style", desc: "Shredded sweet potato and firm tofu fried into crispy fritters with dip.", img: "Crispy Kamote & Tokwa Fritters.jpeg", ingredients: [{ id: 15, req: 1 }, { id: 6, req: 1 }] },
+      { id: 13, title: "Tortang Dilis with Scallions", mealtime: "Agahan", badge: "🍳 Egg Winner!", desc: "Savory egg omelet packed with crispy dilis and scallions.", img: "Crispy Dilis, Fried Egg & Sliced Fresh Kamatis.jpeg", ingredients: [{ id: 7, req: 40 }, { id: 3, req: 2 }] },
+      { id: 14, title: "Ginisang Mongo with Kangkong & Crispy Dilis", mealtime: "Tanghalian", badge: "🥣 Warm Soup", desc: "Thick mung bean stew topped with crispy dilis and kangkong greens.", img: "Ginisang Mongo with Kangkong & Crispy Dilis.jpeg", ingredients: [{ id: 18, req: 100 }, { id: 7, req: 30 }] },
+      { id: 15, title: "Pork Giniling & Tokwa Picadillo", mealtime: "Tanghalian", badge: "⭐ Kid Favorite", desc: "Sautéed ground pork, tokwa cubes, potato, and bell peppers in light soy sauce.", img: "Crispy Tokwa Boats with Giniling Filling.jpeg", ingredients: [{ id: 4, req: 200 }, { id: 6, req: 1 }] },
+      { id: 16, title: "Gabi & Kangkong Sinigang-Style Fish", mealtime: "Tanghalian", badge: "🥣 Sour Soup", desc: "Sour fish soup thickened with melted gabi root and loaded with kangkong leaves.", img: "Gabi & Kangkong Sinigang-Style Fish.jpeg", ingredients: [{ id: 2, req: 250 }, { id: 10, req: 2 }] },
+      { id: 17, title: "Ginisang Sayote with Giniling & Bell Peppers", mealtime: "Tanghalian", badge: "🌱 Veggie Delight", desc: "Crisp sayote squash stewed with juicy ground pork, garlic, and bell peppers.", img: "Ginisang Sayote with Giniling & Bell Peppers.jpeg", ingredients: [{ id: 8, req: 1 }, { id: 4, req: 100 }] },
+      { id: 18, title: "Pinangat na Isda in Kamatis & Kalamansi", mealtime: "Tanghalian", badge: "🐟 Citrus Fish", desc: "Simmered fish in ripe tomatoes, ginger, kalamansi juice, and sayote slices.", img: "Pesang Isda with Sayote, Ginger & Potatoes.jpeg", ingredients: [{ id: 2, req: 250 }, { id: 11, req: 2 }] },
+      { id: 19, title: "Crispy Tokwa Boats with Giniling Filling", mealtime: "Tanghalian", badge: "⭐ Kid Favorite", desc: "Hollowed tofu blocks stuffed with seasoned ground pork and pan-fried golden.", img: "Crispy Tokwa Boats with Giniling Filling.jpeg", ingredients: [{ id: 6, req: 2 }, { id: 4, req: 150 }] },
+      { id: 20, title: "Creamy Pork & Gabi Stew with Greens", mealtime: "Tanghalian", badge: "🥣 Rich Stew", desc: "Slow-boiled pork chunks in thick gabi broth topped with fresh kangkong.", img: "Creamy Pork & Gabi Stew with Greens.jpeg", ingredients: [{ id: 1, req: 300 }, { id: 10, req: 2 }] },
+      { id: 21, title: "Pesang Isda with Sayote, Ginger & Potatoes", mealtime: "Tanghalian", badge: "🥣 Ginger Soup", desc: "Comforting ginger fish soup loaded with sayote squash and potatoes.", img: "Pesang Isda with Sayote, Ginger & Potatoes.jpeg", ingredients: [{ id: 2, req: 250 }, { id: 8, req: 1 }] },
+      { id: 22, title: "Pork & Potato Ginisang Sayote", mealtime: "Tanghalian", badge: "🌱 Veggie Stew", desc: "Sautéed chayote squash cooked with pork slices, garlic, onions, and potatoes.", img: "Ginisang Sayote with Giniling & Bell Peppers.jpeg", ingredients: [{ id: 1, req: 200 }, { id: 8, req: 1 }] }
+    ];
+
+    let currentMealFilter = 'all';
+    let selectedDishForCook = null;
+    let tempPostImage = null;
+
+    let feedPosts = JSON.parse(localStorage.getItem('dangelo_feed')) || [
+      { id: 1, author: "Dwight D'Angelo", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Dwight", text: "Welcome to our official D'Angelo Family Household menu & newsfeed!", image: null, likes: 5, time: "Just now" }
+    ];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      syncUserUI();
+      renderFeed();
+      renderDishes();
+      renderPantry();
+      renderCookingLog();
+    });
+
+    function syncUserUI() {
+      document.getElementById('userNameHeader').innerText = currentUser.name;
+      document.getElementById('userAvatarHeader').src = currentUser.avatar;
+      document.getElementById('userAvatarPostBox').src = currentUser.avatar;
+      document.getElementById('headerHouseholdSub').innerText = `Household ID: ${currentUser.household}`;
+    }
+
+    function switchTab(tab) {
+      ['feed', 'dishes', 'pantry', 'shopping', 'log'].forEach(t => {
+        document.getElementById(`view-${t}`).classList.add('hidden');
+        document.getElementById(`nav-${t}`).className = "tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-amber-100/50";
+      });
+
+      document.getElementById(`view-${tab}`).classList.remove('hidden');
+      document.getElementById(`nav-${tab}`).className = "tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap bg-amber-600 text-white shadow-sm";
+    }
+
+    function setDishMealFilter(filter) {
+      currentMealFilter = filter;
+      ['all', 'Agahan', 'Tanghalian'].forEach(f => {
+        document.getElementById(`dishFilter-${f}`).className = (f === filter) ? "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-600 text-white shadow-xs" : "px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-amber-900";
+      });
+      renderDishes();
+    }
+
+    function renderDishes() {
+      const container = document.getElementById('dishesGrid');
+      const search = document.getElementById('dishSearchInput').value.toLowerCase();
+
+      const filtered = all22Dishes.filter(d => {
+        const matchMeal = currentMealFilter === 'all' || d.mealtime === currentMealFilter;
+        const matchSearch = d.title.toLowerCase().includes(search) || d.desc.toLowerCase().includes(search);
+        return matchMeal && matchSearch;
+      });
+
+      container.innerHTML = filtered.map(d => `
+        <div class="bg-white rounded-2xl overflow-hidden border border-amber-100 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="relative h-48 bg-slate-100 overflow-hidden">
+              <img src="${d.img}" class="w-full h-full object-cover">
+              <span class="absolute top-3 left-3 ${d.mealtime === 'Agahan' ? 'bg-amber-500' : 'bg-orange-600'} text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full shadow-sm">
+                ${d.mealtime === 'Agahan' ? '🌅 Agahan' : '☀️ Tanghalian'}
+              </span>
+              <span class="absolute bottom-3 right-3 bg-slate-900/80 text-white text-[11px] font-bold px-2.5 py-1 rounded-full backdrop-blur-xs">
+                ${d.badge}
+              </span>
+            </div>
+            <div class="p-5 space-y-2">
+              <h3 class="font-black text-slate-800 text-base leading-snug">${d.title}</h3>
+              <p class="text-slate-500 text-xs leading-relaxed">${d.desc}</p>
+            </div>
+          </div>
+          <div class="px-5 pb-5 pt-2 border-t border-slate-100">
+            <button onclick="openCookModal(${d.id})" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs py-2.5 rounded-xl transition shadow-xs">
+              Cook This Dish
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openCookModal(id) {
+      selectedDishForCook = all22Dishes.find(d => d.id === id);
+      if(!selectedDishForCook) return;
+
+      document.getElementById('cookModalTitle').innerText = selectedDishForCook.title;
+      document.getElementById('cookModalImg').src = selectedDishForCook.img;
+      document.getElementById('cookModalDesc').innerText = selectedDishForCook.desc;
+      document.getElementById('cookServingsInput').value = 1;
+      document.getElementById('cookModal').classList.remove('hidden');
+    }
+
+    function closeCookModal() {
+      document.getElementById('cookModal').classList.add('hidden');
+    }
+
+    function confirmCookDish() {
+      if(!selectedDishForCook) return;
+      const servings = parseInt(document.getElementById('cookServingsInput').value) || 1;
+
+      // Auto Deduct from Pantry
+      if(selectedDishForCook.ingredients) {
+        selectedDishForCook.ingredients.forEach(reqItem => {
+          const pantryItem = pantry.find(p => p.id === reqItem.id);
+          if(pantryItem) {
+            pantryItem.qty = Math.max(0, pantryItem.qty - (reqItem.req * servings));
+          }
+        });
+        localStorage.setItem('dangelo_pantry', JSON.stringify(pantry));
+        renderPantry();
+      }
+
+      // Add to Cooking Log
+      const logEntry = {
+        id: Date.now(),
+        title: selectedDishForCook.title,
+        servings: servings,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        date: new Date().toLocaleDateString()
+      };
+      cookingLog.unshift(logEntry);
+      localStorage.setItem('dangelo_log', JSON.stringify(cookingLog));
+      renderCookingLog();
+
+      closeCookModal();
+      alert(`Cooked ${selectedDishForCook.title} (${servings} servings)! Pantry stock deducted.`);
+    }
+
+    function renderCookingLog() {
+      const container = document.getElementById('cookingLogContainer');
+      if(cookingLog.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 py-2">No meals logged yet today.</p>`;
+        return;
+      }
+      container.innerHTML = cookingLog.map(l => `
+        <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between text-xs">
+          <div>
+            <h4 class="font-bold text-slate-800">${l.title}</h4>
+            <p class="text-[10px] text-slate-400">${l.date} at ${l.time} • ${l.servings} serving(s)</p>
+          </div>
+          <span class="bg-amber-100 text-amber-800 font-bold px-2 py-1 rounded-lg text-[10px]">Cooked</span>
+        </div>
+      `).join('');
+    }
+
+    function shareDishToFeed() {
+      if(!selectedDishForCook) return;
+      const newPost = {
+        id: Date.now(),
+        author: currentUser.name,
+        avatar: currentUser.avatar,
+        text: `Cooking ${selectedDishForCook.title} for the household today! 🍲`,
+        image: selectedDishForCook.img,
+        likes: 1,
+        time: "Just now"
+      };
+      feedPosts.unshift(newPost);
+      localStorage.setItem('dangelo_feed', JSON.stringify(feedPosts));
+      renderFeed();
+      closeCookModal();
+      switchTab('feed');
+    }
+
+    function renderPantry() {
+      const container = document.getElementById('pantryItemsContainer');
+      let total = pantry.length, inStock = 0, lowStock = 0, outStock = 0;
+
+      container.innerHTML = pantry.map(item => {
+        let statusColor = "bg-emerald-100 text-emerald-800";
+        let statusText = "In Stock";
+
+        if(item.qty === 0) {
+          statusColor = "bg-rose-100 text-rose-800";
+          statusText = "Out of Stock";
+          outStock++;
+        } else if(item.qty <= item.lowThreshold) {
+          statusColor = "bg-amber-100 text-amber-800";
+          statusText = "Low Stock";
+          lowStock++;
+        } else {
+          inStock++;
+        }
+
+        return `
+          <div class="py-3 flex items-center justify-between">
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm">${item.name}</h4>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${statusColor}">${statusText}</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <span class="font-extrabold text-sm text-slate-700">${item.qty} ${item.unit}</span>
+              <div class="flex items-center space-x-1">
+                <button onclick="adjustQty(${item.id}, -1)" class="w-7 h-7 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-bold text-slate-700">-</button>
+                <button onclick="adjustQty(${item.id}, 1)" class="w-7 h-7 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-bold text-slate-700">+</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('statTotalItems').innerText = total;
+      document.getElementById('statInStock').innerText = inStock;
+      document.getElementById('statLowStock').innerText = lowStock;
+      document.getElementById('statOutOfStock').innerText = outStock;
+
+      renderShoppingList();
+    }
+
+    function adjustQty(id, change) {
+      const item = pantry.find(i => i.id === id);
+      if(item) {
+        item.qty = Math.max(0, item.qty + change);
+        localStorage.setItem('dangelo_pantry', JSON.stringify(pantry));
+        renderPantry();
+      }
+    }
+
+    function renderShoppingList() {
+      const container = document.getElementById('shoppingListContainer');
+      const needed = pantry.filter(i => i.qty <= i.lowThreshold);
+
+      if(needed.length === 0) {
+        container.innerHTML = `<li class="text-xs text-slate-400 py-2">All pantry items are fully stocked! 🎉</li>`;
+        return;
+      }
+
+      container.innerHTML = needed.map(i => `
+        <li class="p-3 bg-amber-50/60 rounded-xl border border-amber-100 flex items-center justify-between text-xs font-bold text-amber-900">
+          <span>${i.name}</span>
+          <span class="text-rose-600">${i.qty === 0 ? 'Out of Stock' : 'Low Stock (' + i.qty + ' ' + i.unit + ')'}</span>
+        </li>
+      `).join('');
+    }
+
+    function copyShoppingList() {
+      const needed = pantry.filter(i => i.qty <= i.lowThreshold).map(i => `- ${i.name} (${i.qty} ${i.unit})`).join('\n');
+      navigator.clipboard.writeText("D'Angelo Household Shopping List:\n" + needed);
+      alert("Shopping list copied to clipboard!");
+    }
+
+    function handlePostImageSelect(event) {
+      const file = event.target.files[0];
+      if(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          tempPostImage = e.target.result;
+          document.getElementById('postImagePreview').src = tempPostImage;
+          document.getElementById('postImagePreviewContainer').classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function removePostImage() {
+      tempPostImage = null;
+      document.getElementById('postImagePreviewContainer').classList.add('hidden');
+    }
+
+    function createNewPost() {
+      const text = document.getElementById('postInputText').value.trim();
+      if(!text && !tempPostImage) return;
+
+      const newPost = {
+        id: Date.now(),
+        author: currentUser.name,
+        avatar: currentUser.avatar,
+        text: text,
+        image: tempPostImage,
+        likes: 0,
+        time: "Just now"
+      };
+
+      feedPosts.unshift(newPost);
+      localStorage.setItem('dangelo_feed', JSON.stringify(feedPosts));
+      
+      document.getElementById('postInputText').value = '';
+      removePostImage();
+      renderFeed();
+    }
+
+    function renderFeed() {
+      const container = document.getElementById('feedPostsContainer');
+      container.innerHTML = feedPosts.map(p => `
+        <div class="bg-white rounded-3xl p-5 border border-amber-100 shadow-xs space-y-4">
+          <div class="flex items-center space-x-3">
+            <img src="${p.avatar}" class="w-10 h-10 rounded-full object-cover border border-amber-200">
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm">${p.author}</h4>
+              <p class="text-[10px] font-semibold text-slate-400">${p.time} • D'Angelo Household</p>
+            </div>
+          </div>
+          <p class="text-slate-700 text-sm leading-relaxed">${p.text}</p>
+          ${p.image ? `<div class="rounded-2xl overflow-hidden max-h-80"><img src="${p.image}" class="w-full h-full object-cover"></div>` : ''}
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-500">
+            <button onclick="likePost(${p.id})" class="hover:text-amber-600 transition flex items-center space-x-1">
+              <i class="fa-regular fa-heart"></i> <span>${p.likes} Likes</span>
+            </button>
+            <span class="text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md text-[10px]">Family Moment</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function likePost(id) {
+      const p = feedPosts.find(item => item.id === id);
+      if(p) {
+        p.likes++;
+        localStorage.setItem('dangelo_feed', JSON.stringify(feedPosts));
+        renderFeed();
+      }
+    }
+
+    function openProfileModal() {
+      document.getElementById('profileNameInput').value = currentUser.name;
+      document.getElementById('profileHouseholdInput').value = currentUser.household;
+      document.getElementById('profileModalAvatarPreview').src = currentUser.avatar;
+      document.getElementById('profileModal').classList.remove('hidden');
+    }
+
+    function closeProfileModal() {
+      document.getElementById('profileModal').classList.add('hidden');
+    }
+
+    function handleProfileAvatarSelect(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('profileModalAvatarPreview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function saveProfileSettings() {
+      currentUser.name = document.getElementById('profileNameInput').value || "Dwight D'Angelo";
+      currentUser.household = document.getElementById('profileHouseholdInput').value || "DANGELO-HOME";
+      currentUser.avatar = document.getElementById('profileModalAvatarPreview').src;
+
+      localStorage.setItem('dangelo_user', JSON.stringify(currentUser));
+      syncUserUI();
+      closeProfileModal();
+    }
+
+    function openQRModal() {
+      document.getElementById('qrModal').classList.remove('hidden');
+      document.getElementById('qrcode').innerHTML = "";
+      new QRCode(document.getElementById("qrcode"), { text: window.location.href, width: 150, height: 150 });
+    }
+
+    function closeQRModal() {
+      document.getElementById('qrModal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
