@@ -47,19 +47,19 @@
     <!-- Navigation Bar -->
     <div class="max-w-6xl mx-auto px-4 pt-1 pb-2 flex overflow-x-auto space-x-2 no-scrollbar border-t border-slate-100/80">
       <button onclick="switchTab('feed')" id="nav-feed" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap bg-amber-600 text-white cursor-pointer">
-        <i class="fa-solid fa-newspaper"></i> <span>Family News & Moments</span>
+        <i class="fa-solid fa-newspaper"></i> <span>Family News & Moments (Shared)</span>
       </button>
       <button onclick="switchTab('dishes')" id="nav-dishes" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-amber-100/50 cursor-pointer">
-        <i class="fa-solid fa-utensils"></i> <span>Menu & Dishes</span>
+        <i class="fa-solid fa-utensils"></i> <span>My Menu & Dishes</span>
       </button>
       <button onclick="switchTab('pantry')" id="nav-pantry" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-amber-100/50 cursor-pointer">
-        <i class="fa-solid fa-boxes-stacked"></i> <span>Pantry Tracker</span>
+        <i class="fa-solid fa-boxes-stacked"></i> <span>My Pantry Tracker</span>
       </button>
       <button onclick="switchTab('shopping')" id="nav-shopping" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-amber-100/50 cursor-pointer">
-        <i class="fa-solid fa-cart-shopping"></i> <span>Shopping List</span>
+        <i class="fa-solid fa-cart-shopping"></i> <span>My Shopping List</span>
       </button>
       <button onclick="switchTab('log')" id="nav-log" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-amber-100/50 cursor-pointer">
-        <i class="fa-solid fa-clock-rotate-left"></i> <span>Cooking & Leftovers</span>
+        <i class="fa-solid fa-clock-rotate-left"></i> <span>My Cooking & Leftovers</span>
       </button>
     </div>
   </header>
@@ -67,7 +67,7 @@
   <!-- Main Views -->
   <main class="max-w-6xl mx-auto px-4 py-6">
 
-    <!-- TAB 1: MOMENTS FEED -->
+    <!-- TAB 1: MOMENTS FEED (SHARED) -->
     <section id="view-feed" class="space-y-6">
       <div class="bg-white rounded-3xl p-5 border border-amber-100 shadow-xs">
         <div class="flex items-start space-x-3">
@@ -96,7 +96,7 @@
       <div id="feedPostsContainer" class="space-y-6"></div>
     </section>
 
-    <!-- TAB 2: MENU & DISHES -->
+    <!-- TAB 2: MENU & DISHES (PERSONAL) -->
     <section id="view-dishes" class="hidden space-y-6">
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-amber-100 shadow-xs">
         <div class="flex items-center space-x-2 bg-amber-50 p-1 rounded-xl">
@@ -115,7 +115,7 @@
       <div id="dishesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
 
-    <!-- TAB 3: PANTRY TRACKER -->
+    <!-- TAB 3: PANTRY TRACKER (PERSONAL) -->
     <section id="view-pantry" class="hidden space-y-6">
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div class="bg-white p-4 rounded-2xl border border-amber-100 shadow-xs">
@@ -139,8 +139,8 @@
       <div class="bg-white rounded-3xl p-6 border border-amber-100 space-y-4">
         <div class="flex items-center justify-between">
           <div>
-            <h2 id="pantryTitle" class="text-lg font-black text-slate-800">Pantry Inventory</h2>
-            <p class="text-xs text-slate-500">Quickly add or decrease stocks right beside each item</p>
+            <h2 id="pantryTitle" class="text-lg font-black text-slate-800">My Personal Pantry Inventory</h2>
+            <p class="text-xs text-slate-500">Quickly add or decrease stocks in your house</p>
           </div>
           <button onclick="openAddPantryModal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center space-x-1.5 shadow-xs cursor-pointer">
             <i class="fa-solid fa-plus"></i>
@@ -151,13 +151,13 @@
       </div>
     </section>
 
-    <!-- TAB 4: SHOPPING LIST -->
+    <!-- TAB 4: SHOPPING LIST (PERSONAL) -->
     <section id="view-shopping" class="hidden space-y-6">
       <div class="bg-white rounded-3xl p-6 border border-amber-100 space-y-4">
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-lg font-black text-slate-800">Grocery Shopping List</h2>
-            <p class="text-xs text-slate-500">Auto-compiled from Low Stock & Out of Stock items</p>
+            <h2 class="text-lg font-black text-slate-800">My Grocery Shopping List</h2>
+            <p class="text-xs text-slate-500">Auto-compiled from your Low Stock & Out of Stock items</p>
           </div>
           <button onclick="copyShoppingList()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition flex items-center space-x-1.5 cursor-pointer">
             <i class="fa-solid fa-copy"></i>
@@ -168,7 +168,7 @@
       </div>
     </section>
 
-    <!-- TAB 5: COOKING LOG & FRIDGE LEFTOVERS -->
+    <!-- TAB 5: COOKING LOG & FRIDGE LEFTOVERS (PERSONAL) -->
     <section id="view-log" class="hidden space-y-6">
       
       <!-- FRIDGE LEFTOVERS MONITOR -->
@@ -177,8 +177,8 @@
           <div class="flex items-center space-x-2">
             <span class="text-2xl">🧊</span>
             <div>
-              <h2 class="text-lg font-black leading-tight">Fridge Leftovers Monitor</h2>
-              <p class="text-xs text-cyan-200">Track cooked food stored in the refrigerator</p>
+              <h2 class="text-lg font-black leading-tight">My Fridge Leftovers</h2>
+              <p class="text-xs text-cyan-200">Track cooked food stored in your refrigerator</p>
             </div>
           </div>
           <span id="leftoverCountBadge" class="bg-cyan-700 text-cyan-100 text-xs font-extrabold px-3 py-1 rounded-full">0 active</span>
@@ -188,7 +188,7 @@
 
       <!-- COOKING LOG HISTORICAL RECORD -->
       <div class="bg-white rounded-3xl p-6 border border-amber-100 space-y-4">
-        <h2 id="cookingLogTitle" class="text-lg font-black text-slate-800">Kitchen Cooking Log</h2>
+        <h2 id="cookingLogTitle" class="text-lg font-black text-slate-800">My Cooking Log</h2>
         <div id="cookingLogContainer" class="space-y-3"></div>
       </div>
     </section>
@@ -387,7 +387,7 @@
   <script>
     // --- FIREBASE INITIALIZATION ---
     let db = null;
-    const HOUSEHOLD_DOC_ID = "dangelo_home_main";
+    const SHARED_HOUSEHOLD_DOC = "dangelo_home_main";
 
     try {
       const firebaseConfig = {
@@ -433,6 +433,7 @@
     ];
 
     let currentUser = {
+      id: 'user_' + Math.random().toString(36).substr(2, 9),
       name: 'Dwight',
       householdName: "D'Angelo Family Household",
       avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Dwight',
@@ -443,7 +444,12 @@
       const savedUser = localStorage.getItem('dangelo_user');
       if (savedUser) {
         const parsed = JSON.parse(savedUser);
-        if (parsed && parsed.name) currentUser = parsed;
+        if (parsed && parsed.name) {
+          currentUser = parsed;
+          if (!currentUser.id) currentUser.id = 'user_' + Math.random().toString(36).substr(2, 9);
+        }
+      } else {
+        localStorage.setItem('dangelo_user', JSON.stringify(currentUser));
       }
     } catch (e) {
       console.warn("Local user parse error:", e);
@@ -491,51 +497,64 @@
       renderPantry();
       renderCookingLog();
       renderLeftovers();
-      initFirestoreListener();
+      initFirestoreListeners();
     });
 
     // --- REAL-TIME FIRESTORE SYNC ---
-    function initFirestoreListener() {
+    function initFirestoreListeners() {
       if (!db) return;
-      db.collection("households").doc(HOUSEHOLD_DOC_ID).onSnapshot((doc) => {
+
+      // 1. SHARED HOUSEHOLD NEWSFEED (Public to all)
+      db.collection("households").doc(SHARED_HOUSEHOLD_DOC).onSnapshot((doc) => {
         if (doc.exists) {
           const data = doc.data();
-          if (data.pantry && Array.isArray(data.pantry)) pantry = data.pantry;
-          if (data.dishes && Array.isArray(data.dishes)) dishes = data.dishes;
-          if (data.cookingLog && Array.isArray(data.cookingLog)) cookingLog = data.cookingLog;
-          if (data.leftovers && Array.isArray(data.leftovers)) leftovers = data.leftovers;
           if (data.feedPosts && Array.isArray(data.feedPosts)) feedPosts = data.feedPosts;
-          if (data.householdName) {
-            currentUser.householdName = data.householdName;
-            currentUser.household = data.householdId || currentUser.household;
-          }
         } else {
-          saveToFirestore();
+          saveSharedFeedToFirestore();
         }
-        syncUserUI();
         renderFeed();
-        renderDishes();
-        renderPantry();
-        renderCookingLog();
-        renderLeftovers();
-      }, (error) => {
-        console.error("Firestore sync error:", error);
-      });
+      }, (error) => console.error("Shared feed error:", error));
+
+      // 2. INDIVIDUAL PERSONAL DATA (Pantry, Dishes, Leftovers, Logs per user ID)
+      if (currentUser && currentUser.id) {
+        db.collection("users").doc(currentUser.id).onSnapshot((doc) => {
+          if (doc.exists) {
+            const data = doc.data();
+            if (data.pantry && Array.isArray(data.pantry)) pantry = data.pantry;
+            if (data.dishes && Array.isArray(data.dishes)) dishes = data.dishes;
+            if (data.cookingLog && Array.isArray(data.cookingLog)) cookingLog = data.cookingLog;
+            if (data.leftovers && Array.isArray(data.leftovers)) leftovers = data.leftovers;
+          } else {
+            savePersonalDataToFirestore();
+          }
+          syncUserUI();
+          renderDishes();
+          renderPantry();
+          renderCookingLog();
+          renderLeftovers();
+        }, (error) => console.error("User personal data error:", error));
+      }
     }
 
-    function saveToFirestore() {
-      if (!db) return;
-      db.collection("households").doc(HOUSEHOLD_DOC_ID).set({
+    function savePersonalDataToFirestore() {
+      if (!db || !currentUser || !currentUser.id) return;
+      db.collection("users").doc(currentUser.id).set({
         pantry: Array.isArray(pantry) ? pantry : [],
         dishes: Array.isArray(dishes) ? dishes : [],
         cookingLog: Array.isArray(cookingLog) ? cookingLog : [],
         leftovers: Array.isArray(leftovers) ? leftovers : [],
+        userName: currentUser?.name || "Dwight",
+        householdName: currentUser?.householdName || "D'Angelo Family Household"
+      }, { merge: true }).catch((error) => console.error("Error saving personal data: ", error));
+    }
+
+    function saveSharedFeedToFirestore() {
+      if (!db) return;
+      db.collection("households").doc(SHARED_HOUSEHOLD_DOC).set({
         feedPosts: Array.isArray(feedPosts) ? feedPosts : [],
-        householdName: currentUser?.householdName || "D'Angelo Family Household",
-        householdId: currentUser?.household || "DANGELO-HOME"
-      }, { merge: true }).catch((error) => {
-        console.error("Error saving to Firestore: ", error);
-      });
+        householdName: "D'Angelo Family Household",
+        householdId: "DANGELO-HOME"
+      }, { merge: true }).catch((error) => console.error("Error saving shared feed: ", error));
     }
 
     function syncUserUI() {
@@ -563,10 +582,10 @@
       if (userAvatarP) userAvatarP.src = uAvatar;
 
       const pantryT = document.getElementById('pantryTitle');
-      if (pantryT) pantryT.innerText = `${hName} Pantry Inventory`;
+      if (pantryT) pantryT.innerText = `${uName}'s Personal Pantry`;
 
       const cookT = document.getElementById('cookingLogTitle');
-      if (cookT) cookT.innerText = `${hName} Cooking Log`;
+      if (cookT) cookT.innerText = `${uName}'s Cooking Log`;
     }
 
     function switchTab(tab) {
@@ -660,7 +679,7 @@
         }
         return item;
       });
-      saveToFirestore();
+      savePersonalDataToFirestore();
       renderPantry();
     }
 
@@ -685,16 +704,16 @@
 
       const newItem = { id: Date.now(), name, qty, unit, lowThreshold: threshold };
       pantry.push(newItem);
-      saveToFirestore();
+      savePersonalDataToFirestore();
       closeAddPantryModal();
       renderPantry();
     }
 
     function deletePantryItem(id) {
-      if (confirm("Remove this item from pantry?")) {
+      if (confirm("Remove this item from your pantry?")) {
         if (!Array.isArray(pantry)) pantry = [];
         pantry = pantry.filter(i => i.id !== id);
-        saveToFirestore();
+        savePersonalDataToFirestore();
         renderPantry();
       }
     }
@@ -728,7 +747,7 @@
       const needed = safePantry.filter(i => i.qty <= i.lowThreshold);
       if (needed.length === 0) { alert("Shopping list is empty!"); return; }
       
-      const text = `${currentUser?.householdName || "Household"} Grocery List:\n` + needed.map(i => `- ${i.name} (${i.qty} ${i.unit} left)`).join('\n');
+      const text = `${currentUser?.name || "My"} Grocery List:\n` + needed.map(i => `- ${i.name} (${i.qty} ${i.unit} left)`).join('\n');
       navigator.clipboard.writeText(text);
       alert("Grocery list copied to clipboard!");
     }
@@ -896,7 +915,7 @@
         dishes.unshift({ id: Date.now(), title, mealtime, badge, desc, img });
       }
 
-      saveToFirestore();
+      savePersonalDataToFirestore();
       closeAddDishModal();
       renderDishes();
     }
@@ -973,7 +992,7 @@
         });
       }
 
-      saveToFirestore();
+      savePersonalDataToFirestore();
       closeCookModal();
       renderCookingLog();
       renderLeftovers();
@@ -996,7 +1015,7 @@
       };
 
       feedPosts.unshift(newPost);
-      saveToFirestore();
+      saveSharedFeedToFirestore();
       closeCookModal();
       renderFeed();
       switchTab('feed');
@@ -1037,7 +1056,7 @@
       if (badge) badge.innerText = `${safeLeftovers.length} container(s)`;
 
       if (safeLeftovers.length === 0) {
-        container.innerHTML = `<p class="text-xs text-cyan-200 italic col-span-2">No leftovers currently stored in the fridge.</p>`;
+        container.innerHTML = `<p class="text-xs text-cyan-200 italic col-span-2">No leftovers currently stored in your fridge.</p>`;
         return;
       }
 
@@ -1071,20 +1090,20 @@
         return i;
       }).filter(i => i.qty > 0);
 
-      saveToFirestore();
+      savePersonalDataToFirestore();
       renderLeftovers();
     }
 
     function clearLeftover(id) {
-      if (confirm("Clear this leftover item from the fridge monitor?")) {
+      if (confirm("Clear this leftover item from your fridge monitor?")) {
         if (!Array.isArray(leftovers)) leftovers = [];
         leftovers = leftovers.filter(i => i.id !== id);
-        saveToFirestore();
+        savePersonalDataToFirestore();
         renderLeftovers();
       }
     }
 
-    // --- MOMENTS FEED LOGIC ---
+    // --- MOMENTS FEED LOGIC (SHARED) ---
 
     function renderFeed() {
       const container = document.getElementById('feedPostsContainer');
@@ -1155,7 +1174,7 @@
       };
 
       feedPosts.unshift(newPost);
-      saveToFirestore();
+      saveSharedFeedToFirestore();
 
       const txtArea = document.getElementById('postInputText');
       if (txtArea) txtArea.value = '';
@@ -1166,7 +1185,7 @@
     function likePost(id) {
       if (!Array.isArray(feedPosts)) feedPosts = [];
       feedPosts = feedPosts.map(p => p.id === id ? { ...p, likes: p.likes + 1 } : p);
-      saveToFirestore();
+      saveSharedFeedToFirestore();
       renderFeed();
     }
 
@@ -1174,7 +1193,7 @@
       if (confirm("Delete this post?")) {
         if (!Array.isArray(feedPosts)) feedPosts = [];
         feedPosts = feedPosts.filter(p => p.id !== id);
-        saveToFirestore();
+        saveSharedFeedToFirestore();
         renderFeed();
       }
     }
@@ -1219,6 +1238,7 @@
       if (!name) { alert("Please enter your name."); return; }
 
       currentUser = {
+        id: currentUser.id || 'user_' + Math.random().toString(36).substr(2, 9),
         name,
         householdName,
         household,
@@ -1226,7 +1246,7 @@
       };
 
       localStorage.setItem('dangelo_user', JSON.stringify(currentUser));
-      saveToFirestore();
+      savePersonalDataToFirestore();
       syncUserUI();
       closeProfileModal();
     }
