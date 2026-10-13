@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>D'Angelo Family Household - Lutong Bahay Menu & Moments</title>
+  <title id="docTitle">D'Angelo Family Household - Lutong Bahay Menu & Moments</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -22,7 +22,7 @@
       <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('feed')">
         <span class="text-3xl">🍲</span>
         <div>
-          <h1 class="text-xl font-extrabold text-amber-900 leading-tight">D'Angelo Family Household</h1>
+          <h1 id="headerHouseholdTitle" class="text-xl font-extrabold text-amber-900 leading-tight">D'Angelo Family Household</h1>
           <p class="text-xs font-semibold text-amber-600" id="headerHouseholdSub">Household ID: DANGELO-HOME</p>
         </div>
       </div>
@@ -68,7 +68,7 @@
         <div class="flex items-start space-x-3">
           <img id="userAvatarPostBox" src="https://api.dicebear.com/7.x/bottts/svg?seed=Dwight" class="w-10 h-10 rounded-full object-cover border border-amber-200">
           <div class="flex-1 space-y-3">
-            <textarea id="postInputText" rows="2" placeholder="Share food updates, moments, or recipe ideas with D'Angelo Family..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"></textarea>
+            <textarea id="postInputText" rows="2" placeholder="Share food updates, moments, or recipe ideas with your family..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"></textarea>
             <div id="postImagePreviewContainer" class="hidden relative rounded-2xl overflow-hidden max-h-60 bg-slate-100">
               <img id="postImagePreview" src="" class="w-full h-full object-cover">
               <button onclick="removePostImage()" class="absolute top-2 right-2 bg-slate-900/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs">
@@ -130,8 +130,18 @@
           <p id="statOutOfStock" class="text-2xl font-black text-rose-800">0</p>
         </div>
       </div>
+
       <div class="bg-white rounded-3xl p-6 border border-amber-100 space-y-4">
-        <h2 class="text-lg font-black text-slate-800">D'Angelo Family Pantry Inventory</h2>
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 id="pantryTitle" class="text-lg font-black text-slate-800">Pantry Inventory</h2>
+            <p class="text-xs text-slate-500">Quickly add or decrease stocks right beside each item</p>
+          </div>
+          <button onclick="openAddPantryModal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center space-x-1.5 shadow-xs">
+            <i class="fa-solid fa-plus"></i>
+            <span>Add Item</span>
+          </button>
+        </div>
         <div id="pantryItemsContainer" class="divide-y divide-slate-100"></div>
       </div>
     </section>
@@ -156,7 +166,7 @@
     <!-- TAB 5: COOKING LOG -->
     <section id="view-log" class="hidden space-y-6">
       <div class="bg-white rounded-3xl p-6 border border-amber-100 space-y-4">
-        <h2 class="text-lg font-black text-slate-800">D'Angelo Kitchen Cooking Log</h2>
+        <h2 id="cookingLogTitle" class="text-lg font-black text-slate-800">Kitchen Cooking Log</h2>
         <div id="cookingLogContainer" class="space-y-3"></div>
       </div>
     </section>
@@ -196,7 +206,6 @@
           <textarea id="newDishDesc" rows="2" placeholder="Brief details about this recipe..." class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl resize-none"></textarea>
         </div>
 
-        <!-- Dish Photo Upload Area -->
         <div class="space-y-2">
           <label class="text-xs font-bold text-slate-600">Dish Photo</label>
           <div class="flex items-center space-x-3">
@@ -218,6 +227,48 @@
 
       <button onclick="saveNewDish()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-xl text-sm transition">
         Save Dish Changes
+      </button>
+    </div>
+  </div>
+
+  <!-- ADD / EDIT PANTRY ITEM MODAL -->
+  <div id="addPantryModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 id="pantryModalHeader" class="text-lg font-extrabold text-slate-800">Add Pantry Item</h3>
+        <button onclick="closeAddPantryModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="text-xs font-bold text-slate-600">Item Name</label>
+          <input type="text" id="pantryItemName" placeholder="e.g. Pork Liempo" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-bold text-slate-600">Current Qty</label>
+            <input type="number" id="pantryItemQty" value="1" min="0" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-600">Unit Type</label>
+            <select id="pantryItemUnit" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
+              <option value="containers">containers 🍱</option>
+              <option value="packs">packs 📦</option>
+              <option value="pcs">pcs 🥔</option>
+              <option value="g">g (grams)</option>
+              <option value="kg">kg (kilograms)</option>
+              <option value="tali">tali 🌿</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600">Low Stock Alert Level</label>
+          <input type="number" id="pantryItemThreshold" value="1" min="0" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
+        </div>
+      </div>
+
+      <button onclick="savePantryItem()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-xl text-sm transition">
+        Save Item
       </button>
     </div>
   </div>
@@ -248,11 +299,11 @@
     </div>
   </div>
 
-  <!-- USER PROFILE MODAL -->
+  <!-- USER & HOUSEHOLD PROFILE MODAL -->
   <div id="profileModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-5 shadow-2xl">
       <div class="flex items-center justify-between">
-        <h3 class="text-lg font-extrabold text-slate-800">Profile Settings</h3>
+        <h3 class="text-lg font-extrabold text-slate-800">Profile & Household Settings</h3>
         <button onclick="closeProfileModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
       <div class="flex flex-col items-center space-y-3">
@@ -271,12 +322,16 @@
           <input type="text" id="profileNameInput" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
         </div>
         <div>
+          <label class="text-xs font-bold text-slate-600">Household Name</label>
+          <input type="text" id="profileHouseholdNameInput" placeholder="e.g. D'Angelo Family Household" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
+        </div>
+        <div>
           <label class="text-xs font-bold text-slate-600">Household ID</label>
           <input type="text" id="profileHouseholdInput" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold uppercase">
         </div>
       </div>
       <button onclick="saveProfileSettings()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-xs">
-        Save Profile
+        Save Settings
       </button>
     </div>
   </div>
@@ -284,7 +339,7 @@
   <!-- QR MODAL -->
   <div id="qrModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl space-y-4">
-      <h3 class="text-xl font-black text-slate-800">D'Angelo Household QR</h3>
+      <h3 id="qrModalTitle" class="text-xl font-black text-slate-800">Household QR</h3>
       <div id="qrcode" class="flex justify-center p-4 bg-amber-50 rounded-2xl border border-amber-100"></div>
       <button onclick="closeQRModal()" class="w-full bg-slate-800 text-white font-bold py-2.5 rounded-xl text-sm">Close</button>
     </div>
@@ -294,43 +349,45 @@
   <script>
     const default22Dishes = [
       { id: 1, title: "Stir-Fried Tokwa & Kangkong in Soy-Kalamansi", mealtime: "Agahan", badge: "🌱 Healthy High-Protein", desc: "Crispy fried tofu and fresh kangkong stems tossed in garlic soy-kalamansi sauce.", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80" },
-      { id: 2, title: "Spam & Kamote Kimchi-Style Stir-Fry", mealtime: "Agahan", badge: "🍳 Sweet & Savory", desc: "Crispy Korean Spam, sweet kamote cubes, onion, and eggs stir-fried together.", img: "Egg & Spam Breakfast-for-Dinner Scramble.jpeg" },
+      { id: 2, title: "Spam & Kamote Kimchi-Style Stir-Fry", mealtime: "Agahan", badge: "🍳 Sweet & Savory", desc: "Crispy Korean Spam, sweet kamote cubes, onion, and eggs stir-fried together.", img: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80" },
       { id: 3, title: "Potato & Kamote Tortang Giniling", mealtime: "Agahan", badge: "🍳 Egg Winner!", desc: "Savory egg omelet filled with spiced ground pork, potatoes, and sweet kamote.", img: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80" },
-      { id: 4, title: "Crispy Dilis, Fried Egg & Sliced Fresh Kamatis", mealtime: "Agahan", badge: "🐟 Crunchy Silog", desc: "Light, satisfying fried dilis platter served with a sunny-side egg and sliced tomatoes.", img: "Crispy Dilis, Fried Egg & Sliced Fresh Kamatis.jpeg" },
+      { id: 4, title: "Crispy Dilis, Fried Egg & Sliced Fresh Kamatis", mealtime: "Agahan", badge: "🐟 Crunchy Silog", desc: "Light, satisfying fried dilis platter served with a sunny-side egg and sliced tomatoes.", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80" },
       { id: 5, title: "Sweet & Savory Spam & Kamote Hash", mealtime: "Agahan", badge: "🍟 Sweet & Crunchy", desc: "Pan-caramelized Spam cubes, sweet kamote, onions, and bell peppers.", img: "https://images.unsplash.com/photo-1584850125868-9a4c78bd8999?auto=format&fit=crop&w=600&q=80" },
-      { id: 6, title: "Saging Saba & Dilis Sweet-Salty Combo", mealtime: "Agahan", badge: "🍌 Filo Classic", desc: "Boiled or sautéed saging saba slices served alongside crispy salted dilis.", img: "Crispy Dilis, Fried Egg & Sliced Fresh Kamatis.jpeg" },
-      { id: 7, title: "Egg & Spam Breakfast-for-Dinner Scramble", mealtime: "Agahan", badge: "⭐ Quick & Tasty", desc: "Soft scrambled eggs with diced Korean Spam and bell peppers.", img: "Egg & Spam Breakfast-for-Dinner Scramble.jpeg" },
-      { id: 8, title: "Fish & Kamote Fries Platter", mealtime: "Agahan", badge: "🍟 Healthy Fries", desc: "Pan-fried fish fillet served alongside golden crispy sweet potato wedges.", img: "Fish & Kamote Fries Platter.jpeg" },
-      { id: 9, title: "Tokwa & Egg Stir-Fry with Kalamansi Drizzle", mealtime: "Agahan", badge: "🌱 High Protein", desc: "High-protein egg scramble with firm tofu cubes and fresh kalamansi citrus.", img: "Crispy Kamote & Tokwa Fritters.jpeg" },
-      { id: 10, title: "Tortang Kangkong & Tokwa Patties", mealtime: "Agahan", badge: "🥞 Veggie Patty", desc: "Chopped greens and mashed tofu bound with egg and pan-fried into crispy patties.", img: "Crispy Kamote & Tokwa Fritters.jpeg" },
-      { id: 11, title: "Sinangag, Crispy Tokwa & Sliced Tomato Salad", mealtime: "Agahan", badge: "🧄 Garlic Rice Combo", desc: "Garlic fried rice served with golden tofu blocks and fresh citrus tomato salad.", img: "Crispy Dilis, Fried Egg & Sliced Fresh Kamatis.jpeg" },
-      { id: 12, title: "Crispy Kamote & Tokwa Fritters", mealtime: "Agahan", badge: "🍟 Crunchy Ukoy Style", desc: "Shredded sweet potato and firm tofu fried into crispy fritters with dip.", img: "Crispy Kamote & Tokwa Fritters.jpeg" },
-      { id: 13, title: "Tortang Dilis with Scallions", mealtime: "Agahan", badge: "🍳 Egg Winner!", desc: "Savory egg omelet packed with crispy dilis and scallions.", img: "Crispy Dilis, Fried Egg & Sliced Fresh Kamatis.jpeg" },
-      { id: 14, title: "Ginisang Mongo with Kangkong & Crispy Dilis", mealtime: "Tanghalian", badge: "🥣 Warm Soup", desc: "Thick mung bean stew topped with crispy dilis and kangkong greens.", img: "Ginisang Mongo with Kangkong & Crispy Dilis.jpeg" },
-      { id: 15, title: "Pork Giniling & Tokwa Picadillo", mealtime: "Tanghalian", badge: "⭐ Kid Favorite", desc: "Sautéed ground pork, tokwa cubes, potato, and bell peppers in light soy sauce.", img: "Crispy Tokwa Boats with Giniling Filling.jpeg" },
-      { id: 16, title: "Gabi & Kangkong Sinigang-Style Fish", mealtime: "Tanghalian", badge: "🥣 Sour Soup", desc: "Sour fish soup thickened with melted gabi root and loaded with kangkong leaves.", img: "Gabi & Kangkong Sinigang-Style Fish.jpeg" },
-      { id: 17, title: "Ginisang Sayote with Giniling & Bell Peppers", mealtime: "Tanghalian", badge: "🌱 Veggie Delight", desc: "Crisp sayote squash stewed with juicy ground pork, garlic, and bell peppers.", img: "Ginisang Sayote with Giniling & Bell Peppers.jpeg" },
-      { id: 18, title: "Pinangat na Isda in Kamatis & Kalamansi", mealtime: "Tanghalian", badge: "🐟 Citrus Fish", desc: "Simmered fish in ripe tomatoes, ginger, kalamansi juice, and sayote slices.", img: "Pesang Isda with Sayote, Ginger & Potatoes.jpeg" },
-      { id: 19, title: "Crispy Tokwa Boats with Giniling Filling", mealtime: "Tanghalian", badge: "⭐ Kid Favorite", desc: "Hollowed tofu blocks stuffed with seasoned ground pork and pan-fried golden.", img: "Crispy Tokwa Boats with Giniling Filling.jpeg" },
-      { id: 20, title: "Creamy Pork & Gabi Stew with Greens", mealtime: "Tanghalian", badge: "🥣 Rich Stew", desc: "Slow-boiled pork chunks in thick gabi broth topped with fresh kangkong.", img: "Creamy Pork & Gabi Stew with Greens.jpeg" },
-      { id: 21, title: "Pesang Isda with Sayote, Ginger & Potatoes", mealtime: "Tanghalian", badge: "🥣 Ginger Soup", desc: "Comforting ginger fish soup loaded with sayote squash and potatoes.", img: "Pesang Isda with Sayote, Ginger & Potatoes.jpeg" },
-      { id: 22, title: "Pork & Potato Ginisang Sayote", mealtime: "Tanghalian", badge: "🌱 Veggie Stew", desc: "Sautéed chayote squash cooked with pork slices, garlic, onions, and potatoes.", img: "Ginisang Sayote with Giniling & Bell Peppers.jpeg" }
+      { id: 6, title: "Saging Saba & Dilis Sweet-Salty Combo", mealtime: "Agahan", badge: "🍌 Filo Classic", desc: "Boiled or sautéed saging saba slices served alongside crispy salted dilis.", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80" },
+      { id: 7, title: "Egg & Spam Breakfast-for-Dinner Scramble", mealtime: "Agahan", badge: "⭐ Quick & Tasty", desc: "Soft scrambled eggs with diced Korean Spam and bell peppers.", img: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80" },
+      { id: 8, title: "Fish & Kamote Fries Platter", mealtime: "Agahan", badge: "🍟 Healthy Fries", desc: "Pan-fried fish fillet served alongside golden crispy sweet potato wedges.", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80" },
+      { id: 9, title: "Tokwa & Egg Stir-Fry with Kalamansi Drizzle", mealtime: "Agahan", badge: "🌱 High Protein", desc: "High-protein egg scramble with firm tofu cubes and fresh kalamansi citrus.", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80" },
+      { id: 10, title: "Tortang Kangkong & Tokwa Patties", mealtime: "Agahan", badge: "🥞 Veggie Patty", desc: "Chopped greens and mashed tofu bound with egg and pan-fried into crispy patties.", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80" },
+      { id: 11, title: "Sinangag, Crispy Tokwa & Sliced Tomato Salad", mealtime: "Agahan", badge: "🧄 Garlic Rice Combo", desc: "Garlic fried rice served with golden tofu blocks and fresh citrus tomato salad.", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80" },
+      { id: 12, title: "Crispy Kamote & Tokwa Fritters", mealtime: "Agahan", badge: "🍟 Crunchy Ukoy Style", desc: "Shredded sweet potato and firm tofu fried into crispy fritters with dip.", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80" },
+      { id: 13, title: "Tortang Dilis with Scallions", mealtime: "Agahan", badge: "🍳 Egg Winner!", desc: "Savory egg omelet packed with crispy dilis and scallions.", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80" },
+      { id: 14, title: "Ginisang Mongo with Kangkong & Crispy Dilis", mealtime: "Tanghalian", badge: "🥣 Warm Soup", desc: "Thick mung bean stew topped with crispy dilis and kangkong greens.", img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" },
+      { id: 15, title: "Pork Giniling & Tokwa Picadillo", mealtime: "Tanghalian", badge: "⭐ Kid Favorite", desc: "Sautéed ground pork, tokwa cubes, potato, and bell peppers in light soy sauce.", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" },
+      { id: 16, title: "Gabi & Kangkong Sinigang-Style Fish", mealtime: "Tanghalian", badge: "🥣 Sour Soup", desc: "Sour fish soup thickened with melted gabi root and loaded with kangkong leaves.", img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" },
+      { id: 17, title: "Ginisang Sayote with Giniling & Bell Peppers", mealtime: "Tanghalian", badge: "🌱 Veggie Delight", desc: "Crisp sayote squash stewed with juicy ground pork, garlic, and bell peppers.", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" },
+      { id: 18, title: "Pinangat na Isda in Kamatis & Kalamansi", mealtime: "Tanghalian", badge: "🐟 Citrus Fish", desc: "Simmered fish in ripe tomatoes, ginger, kalamansi juice, and sayote slices.", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80" },
+      { id: 19, title: "Crispy Tokwa Boats with Giniling Filling", mealtime: "Tanghalian", badge: "⭐ Kid Favorite", desc: "Hollowed tofu blocks stuffed with seasoned ground pork and pan-fried golden.", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80" },
+      { id: 20, title: "Creamy Pork & Gabi Stew with Greens", mealtime: "Tanghalian", badge: "🥣 Rich Stew", desc: "Slow-boiled pork chunks in thick gabi broth topped with fresh kangkong.", img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" },
+      { id: 21, title: "Pesang Isda with Sayote, Ginger & Potatoes", mealtime: "Tanghalian", badge: "🥣 Ginger Soup", desc: "Comforting ginger fish soup loaded with sayote squash and potatoes.", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80" },
+      { id: 22, title: "Pork & Potato Ginisang Sayote", mealtime: "Tanghalian", badge: "🌱 Veggie Stew", desc: "Sautéed chayote squash cooked with pork slices, garlic, onions, and potatoes.", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" }
     ];
 
     let currentUser = JSON.parse(localStorage.getItem('dangelo_user')) || {
-      name: 'Dwight D\'Angelo',
+      name: 'Dwight',
+      householdName: "D'Angelo Family Household",
       avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Dwight',
       household: 'DANGELO-HOME'
     };
 
+    // Meat items updated to 'containers' unit count by default
     let pantry = JSON.parse(localStorage.getItem('dangelo_pantry')) || [
-      { id: 1, name: 'Pork', qty: 1000, unit: 'g', lowThreshold: 300 },
-      { id: 2, name: 'Fish', qty: 800, unit: 'g', lowThreshold: 200 },
+      { id: 1, name: 'Pork Liempo / Chunks', qty: 3, unit: 'containers', lowThreshold: 1 },
+      { id: 2, name: 'Fish Fillet', qty: 2, unit: 'containers', lowThreshold: 1 },
       { id: 3, name: 'Egg', qty: 12, unit: 'pcs', lowThreshold: 4 },
-      { id: 4, name: 'Giniling (Ground Pork)', qty: 500, unit: 'g', lowThreshold: 200 },
+      { id: 4, name: 'Giniling (Ground Pork)', qty: 4, unit: 'containers', lowThreshold: 1 },
       { id: 5, name: 'Korean Spam', qty: 2, unit: 'pcs', lowThreshold: 1 },
       { id: 6, name: 'Firm Tokwa', qty: 4, unit: 'pcs', lowThreshold: 1 },
-      { id: 7, name: 'Dilis', qty: 250, unit: 'g', lowThreshold: 50 },
+      { id: 7, name: 'Dilis', qty: 2, unit: 'packs', lowThreshold: 1 },
       { id: 8, name: 'Sayote', qty: 3, unit: 'pcs', lowThreshold: 1 },
       { id: 9, name: 'Kangkong', qty: 2, unit: 'tali', lowThreshold: 1 },
       { id: 10, name: 'Gabi', qty: 4, unit: 'pcs', lowThreshold: 1 },
@@ -341,18 +398,19 @@
       { id: 15, name: 'Kamote', qty: 3, unit: 'pcs', lowThreshold: 1 },
       { id: 16, name: 'Ginger', qty: 1, unit: 'pcs', lowThreshold: 1 },
       { id: 17, name: 'Bell Pepper', qty: 2, unit: 'pcs', lowThreshold: 1 },
-      { id: 18, name: 'Mongo', qty: 300, unit: 'g', lowThreshold: 100 }
+      { id: 18, name: 'Mongo', qty: 1, unit: 'packs', lowThreshold: 1 }
     ];
 
     let dishes = JSON.parse(localStorage.getItem('dangelo_dishes')) || default22Dishes;
     let cookingLog = JSON.parse(localStorage.getItem('dangelo_log')) || [];
     let feedPosts = JSON.parse(localStorage.getItem('dangelo_feed')) || [
-      { id: 1, author: "Dwight D'Angelo", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Dwight", text: "Welcome to our official D'Angelo Family Household menu & newsfeed!", image: null, likes: 5, time: "Just now" }
+      { id: 1, author: "Dwight", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Dwight", text: "Welcome to our household menu & newsfeed!", image: null, likes: 5, time: "Just now" }
     ];
 
     let currentMealFilter = 'all';
     let selectedDishForCook = null;
     let editingDishId = null;
+    let editingPantryId = null;
     let tempPostImage = null;
     let tempDishImage = null;
     let tempProfileAvatar = null;
@@ -366,36 +424,15 @@
     });
 
     function syncUserUI() {
+      const hName = currentUser.householdName || "D'Angelo Family Household";
+      document.getElementById('docTitle').innerText = `${hName} - Lutong Bahay Menu & Moments`;
+      document.getElementById('headerHouseholdTitle').innerText = hName;
+      document.getElementById('headerHouseholdSub').innerText = `Household ID: ${currentUser.household}`;
       document.getElementById('userNameHeader').innerText = currentUser.name;
       document.getElementById('userAvatarHeader').src = currentUser.avatar;
       document.getElementById('userAvatarPostBox').src = currentUser.avatar;
-      document.getElementById('headerHouseholdSub').innerText = `Household ID: ${currentUser.household}`;
-    }
-
-    // Image Compressor Function (Fixes LocalStorage Limit Issue)
-    function compressImage(file, maxWidth, quality, callback) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-
-          if (width > maxWidth) {
-            height = Math.round((height * maxWidth) / width);
-            width = maxWidth;
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          callback(canvas.toDataURL('image/jpeg', quality));
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
+      document.getElementById('pantryTitle').innerText = `${hName} Pantry Inventory`;
+      document.getElementById('cookingLogTitle').innerText = `${hName} Cooking Log`;
     }
 
     function switchTab(tab) {
@@ -405,8 +442,150 @@
       });
 
       document.getElementById(`view-${tab}`).classList.remove('hidden');
-      document.getElementById(`nav-${tab}`).className = "tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap bg-amber-600 text-white shadow-sm";
+      document.getElementById(`nav-${tab}`).className = "tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 whitespace-nowrap bg-amber-600 text-white shadow-xs";
     }
+
+    // --- PANTRY TRACKER & QUICK STOCK CONTROLS ---
+
+    function renderPantry() {
+      const container = document.getElementById('pantryItemsContainer');
+      
+      let total = pantry.length;
+      let inStock = 0, lowStock = 0, outStock = 0;
+
+      pantry.forEach(item => {
+        if (item.qty <= 0) outStock++;
+        else if (item.qty <= item.lowThreshold) lowStock++;
+        else inStock++;
+      });
+
+      document.getElementById('statTotalItems').innerText = total;
+      document.getElementById('statInStock').innerText = inStock;
+      document.getElementById('statLowStock').innerText = lowStock;
+      document.getElementById('statOutOfStock').innerText = outStock;
+
+      container.innerHTML = pantry.map(item => {
+        let statusBadge = '';
+        if (item.qty <= 0) {
+          statusBadge = `<span class="bg-rose-100 text-rose-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md">Out of Stock</span>`;
+        } else if (item.qty <= item.lowThreshold) {
+          statusBadge = `<span class="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2 py-0.5 rounded-md">Low Stock</span>`;
+        } else {
+          statusBadge = `<span class="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2 py-0.5 rounded-md">In Stock</span>`;
+        }
+
+        return `
+          <div class="py-3 flex items-center justify-between hover:bg-slate-50/80 px-2 rounded-xl transition">
+            <div class="space-y-0.5">
+              <div class="flex items-center space-x-2">
+                <span class="font-bold text-slate-800 text-sm">${item.name}</span>
+                ${statusBadge}
+              </div>
+              <p class="text-xs text-slate-400 font-medium">Alert threshold: <= ${item.lowThreshold} ${item.unit}</p>
+            </div>
+
+            <div class="flex items-center space-x-3">
+              <!-- Quick Add/Minus Stock Controls -->
+              <div class="flex items-center bg-slate-100 rounded-xl p-1 border border-slate-200">
+                <button onclick="updateStock(${item.id}, -1)" class="w-7 h-7 bg-white text-slate-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg font-black text-xs shadow-xs transition flex items-center justify-center">
+                  <i class="fa-solid fa-minus"></i>
+                </button>
+                <span class="px-3 font-black text-xs text-slate-800 min-w-[3rem] text-center">${item.qty} <span class="text-[10px] text-slate-500 font-normal">${item.unit}</span></span>
+                <button onclick="updateStock(${item.id}, 1)" class="w-7 h-7 bg-amber-600 text-white hover:bg-amber-700 rounded-lg font-black text-xs shadow-xs transition flex items-center justify-center">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+
+              <button onclick="deletePantryItem(${item.id})" class="text-slate-300 hover:text-rose-600 p-1.5 text-xs transition">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      renderShoppingList();
+    }
+
+    function updateStock(id, change) {
+      pantry = pantry.map(item => {
+        if (item.id === id) {
+          const newQty = Math.max(0, item.qty + change);
+          return { ...item, qty: newQty };
+        }
+        return item;
+      });
+      localStorage.setItem('dangelo_pantry', JSON.stringify(pantry));
+      renderPantry();
+    }
+
+    function openAddPantryModal() {
+      document.getElementById('pantryItemName').value = '';
+      document.getElementById('pantryItemQty').value = 1;
+      document.getElementById('pantryItemUnit').value = 'containers';
+      document.getElementById('pantryItemThreshold').value = 1;
+      document.getElementById('addPantryModal').classList.remove('hidden');
+    }
+
+    function closeAddPantryModal() {
+      document.getElementById('addPantryModal').classList.add('hidden');
+    }
+
+    function savePantryItem() {
+      const name = document.getElementById('pantryItemName').value.trim();
+      const qty = parseInt(document.getElementById('pantryItemQty').value) || 0;
+      const unit = document.getElementById('pantryItemUnit').value;
+      const threshold = parseInt(document.getElementById('pantryItemThreshold').value) || 1;
+
+      if (!name) { alert("Please enter an item name."); return; }
+
+      const newItem = { id: Date.now(), name, qty, unit, lowThreshold: threshold };
+      pantry.push(newItem);
+      localStorage.setItem('dangelo_pantry', JSON.stringify(pantry));
+      closeAddPantryModal();
+      renderPantry();
+    }
+
+    function deletePantryItem(id) {
+      if (confirm("Remove this item from pantry?")) {
+        pantry = pantry.filter(i => i.id !== id);
+        localStorage.setItem('dangelo_pantry', JSON.stringify(pantry));
+        renderPantry();
+      }
+    }
+
+    function renderShoppingList() {
+      const container = document.getElementById('shoppingListContainer');
+      const needed = pantry.filter(i => i.qty <= i.lowThreshold);
+
+      if (needed.length === 0) {
+        container.innerHTML = `<li class="text-xs text-emerald-600 font-bold bg-emerald-50 p-4 rounded-xl border border-emerald-100">✨ Pantry is fully stocked! No shopping needed.</li>`;
+        return;
+      }
+
+      container.innerHTML = needed.map(i => `
+        <li class="flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-semibold text-slate-700">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-circle-exclamation ${i.qty === 0 ? 'text-rose-500' : 'text-amber-500'}"></i>
+            <span>${i.name}</span>
+          </div>
+          <span class="font-bold bg-white px-2.5 py-1 rounded-lg border border-slate-200">
+            Current: ${i.qty} ${i.unit} (Restock)
+          </span>
+        </li>
+      `).join('');
+    }
+
+    function copyShoppingList() {
+      const needed = pantry.filter(i => i.qty <= i.lowThreshold);
+      if (needed.length === 0) { alert("Shopping list is empty!"); return; }
+      
+      const text = `${currentUser.householdName || "Household"} Grocery List:\n` + needed.map(i => `- ${i.name} (${i.qty} ${i.unit} left)`).join('\n');
+      navigator.clipboard.writeText(text);
+      alert("Grocery list copied to clipboard!");
+    }
+
+    // --- DISHES & MENU LOGIC ---
 
     function setDishMealFilter(filter) {
       currentMealFilter = filter;
@@ -473,22 +652,21 @@
     }
 
     function openEditDishModal(id) {
+      editingDishId = id;
       const dish = dishes.find(d => d.id === id);
-      if(!dish) return;
+      if (!dish) return;
 
-      editingDishId = dish.id;
-      document.getElementById('addDishModalHeader').innerText = `Edit: ${dish.title}`;
+      document.getElementById('addDishModalHeader').innerText = "Edit Dish Details";
       document.getElementById('newDishTitle').value = dish.title;
       document.getElementById('newDishMealtime').value = dish.mealtime;
-      document.getElementById('newDishBadge').value = dish.badge || "";
+      document.getElementById('newDishBadge').value = dish.badge;
       document.getElementById('newDishDesc').value = dish.desc;
-      document.getElementById('newDishImageUrl').value = dish.img.startsWith('data:') ? "" : dish.img;
-
+      document.getElementById('newDishImageUrl').value = dish.img;
       tempDishImage = dish.img;
+
       document.getElementById('newDishPhotoPreview').src = dish.img;
       document.getElementById('newDishPhotoPreview').classList.remove('hidden');
       document.getElementById('newDishPhotoIcon').classList.add('hidden');
-
       document.getElementById('addDishModal').classList.remove('hidden');
     }
 
@@ -496,21 +674,20 @@
       document.getElementById('addDishModal').classList.add('hidden');
     }
 
-    function handleNewDishFileSelect(event) {
-      const file = event.target.files[0];
-      if(file) {
-        compressImage(file, 600, 0.75, function(compressedUrl) {
-          tempDishImage = compressedUrl;
-          document.getElementById('newDishPhotoPreview').src = compressedUrl;
-          document.getElementById('newDishPhotoPreview').classList.remove('hidden');
-          document.getElementById('newDishPhotoIcon').classList.add('hidden');
-        });
-      }
+    function handleNewDishFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      compressImage(file, 800, 0.7, (base64) => {
+        tempDishImage = base64;
+        document.getElementById('newDishPhotoPreview').src = base64;
+        document.getElementById('newDishPhotoPreview').classList.remove('hidden');
+        document.getElementById('newDishPhotoIcon').classList.add('hidden');
+      });
     }
 
-    function handleNewDishUrlInput(event) {
-      const url = event.target.value.trim();
-      if(url) {
+    function handleNewDishUrlInput(e) {
+      const url = e.target.value.trim();
+      if (url) {
         tempDishImage = url;
         document.getElementById('newDishPhotoPreview').src = url;
         document.getElementById('newDishPhotoPreview').classList.remove('hidden');
@@ -520,36 +697,29 @@
 
     function saveNewDish() {
       const title = document.getElementById('newDishTitle').value.trim();
-      if(!title) {
-        alert("Please enter a dish name.");
-        return;
-      }
-
       const mealtime = document.getElementById('newDishMealtime').value;
-      const badge = document.getElementById('newDishBadge').value.trim() || "⭐ Family Recipe";
-      const desc = document.getElementById('newDishDesc').value.trim() || "Homemade family favorite dish.";
+      const badge = document.getElementById('newDishBadge').value.trim();
+      const desc = document.getElementById('newDishDesc').value.trim();
       const img = tempDishImage || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80";
 
-      if(editingDishId) {
-        const dishIndex = dishes.findIndex(d => d.id === editingDishId);
-        if(dishIndex !== -1) {
-          dishes[dishIndex] = { ...dishes[dishIndex], title, mealtime, badge, desc, img };
-          alert(`Updated photo and details for "${title}"!`);
-        }
+      if (!title) { alert("Please enter a dish name."); return; }
+
+      if (editingDishId) {
+        dishes = dishes.map(d => d.id === editingDishId ? { ...d, title, mealtime, badge, desc, img } : d);
       } else {
-        const newDishObj = { id: Date.now(), title, mealtime, badge, desc, img };
-        dishes.unshift(newDishObj);
-        alert(`"${title}" added to your family menu!`);
+        dishes.unshift({ id: Date.now(), title, mealtime, badge, desc, img });
       }
 
       localStorage.setItem('dangelo_dishes', JSON.stringify(dishes));
-      renderDishes();
       closeAddDishModal();
+      renderDishes();
     }
+
+    // --- COOK & LOGIC ---
 
     function openCookModal(id) {
       selectedDishForCook = dishes.find(d => d.id === id);
-      if(!selectedDishForCook) return;
+      if (!selectedDishForCook) return;
 
       document.getElementById('cookModalTitle').innerText = selectedDishForCook.title;
       document.getElementById('cookModalImg').src = selectedDishForCook.img;
@@ -563,161 +733,127 @@
     }
 
     function confirmCookDish() {
-      if(!selectedDishForCook) return;
+      if (!selectedDishForCook) return;
       const servings = parseInt(document.getElementById('cookServingsInput').value) || 1;
 
+      // Add to cooking log
       const logEntry = {
         id: Date.now(),
-        title: selectedDishForCook.title,
-        servings: servings,
+        dishName: selectedDishForCook.title,
+        servings,
+        cookedBy: currentUser.name,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         date: new Date().toLocaleDateString()
       };
+
       cookingLog.unshift(logEntry);
       localStorage.setItem('dangelo_log', JSON.stringify(cookingLog));
-      renderCookingLog();
 
       closeCookModal();
-      alert(`Cooked ${selectedDishForCook.title} (${servings} servings)!`);
-    }
-
-    function renderCookingLog() {
-      const container = document.getElementById('cookingLogContainer');
-      if(cookingLog.length === 0) {
-        container.innerHTML = `<p class="text-xs text-slate-400 py-2">No meals logged yet today.</p>`;
-        return;
-      }
-      container.innerHTML = cookingLog.map(l => `
-        <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between text-xs">
-          <div>
-            <h4 class="font-bold text-slate-800">${l.title}</h4>
-            <p class="text-[10px] text-slate-400">${l.date} at ${l.time} • ${l.servings} serving(s)</p>
-          </div>
-          <span class="bg-amber-100 text-amber-800 font-bold px-2 py-1 rounded-lg text-[10px]">Cooked</span>
-        </div>
-      `).join('');
+      renderCookingLog();
+      alert(`Recorded! Cooked ${servings} serving(s) of ${selectedDishForCook.title}.`);
     }
 
     function shareDishToFeed() {
-      if(!selectedDishForCook) return;
+      if (!selectedDishForCook) return;
+      const servings = parseInt(document.getElementById('cookServingsInput').value) || 1;
+      
       const newPost = {
         id: Date.now(),
         author: currentUser.name,
         avatar: currentUser.avatar,
-        text: `Cooking ${selectedDishForCook.title} for the household today! 🍲`,
+        text: `🍳 Freshly prepared ${servings} serving(s) of ${selectedDishForCook.title}! Come and get it!`,
         image: selectedDishForCook.img,
-        likes: 1,
+        likes: 0,
         time: "Just now"
       };
+
       feedPosts.unshift(newPost);
       localStorage.setItem('dangelo_feed', JSON.stringify(feedPosts));
-      renderFeed();
       closeCookModal();
+      renderFeed();
       switchTab('feed');
     }
 
-    function renderPantry() {
-      const container = document.getElementById('pantryItemsContainer');
-      let total = pantry.length, inStock = 0, lowStock = 0, outStock = 0;
-
-      container.innerHTML = pantry.map(item => {
-        let statusColor = "bg-emerald-100 text-emerald-800";
-        let statusText = "In Stock";
-
-        if(item.qty === 0) {
-          statusColor = "bg-rose-100 text-rose-800";
-          statusText = "Out of Stock";
-          outStock++;
-        } else if(item.qty <= item.lowThreshold) {
-          statusColor = "bg-amber-100 text-amber-800";
-          statusText = "Low Stock";
-          lowStock++;
-        } else {
-          inStock++;
-        }
-
-        return `
-          <div class="py-3 flex items-center justify-between">
-            <div>
-              <h4 class="font-bold text-slate-800 text-sm">${item.name}</h4>
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${statusColor}">${statusText}</span>
-            </div>
-            <div class="flex items-center space-x-3">
-              <span class="font-extrabold text-sm text-slate-700">${item.qty} ${item.unit}</span>
-              <div class="flex items-center space-x-1">
-                <button onclick="adjustQty(${item.id}, -1)" class="w-7 h-7 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-bold text-slate-700">-</button>
-                <button onclick="adjustQty(${item.id}, 1)" class="w-7 h-7 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-bold text-slate-700">+</button>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      document.getElementById('statTotalItems').innerText = total;
-      document.getElementById('statInStock').innerText = inStock;
-      document.getElementById('statLowStock').innerText = lowStock;
-      document.getElementById('statOutOfStock').innerText = outStock;
-
-      renderShoppingList();
-    }
-
-    function adjustQty(id, change) {
-      const item = pantry.find(i => i.id === id);
-      if(item) {
-        item.qty = Math.max(0, item.qty + change);
-        localStorage.setItem('dangelo_pantry', JSON.stringify(pantry));
-        renderPantry();
-      }
-    }
-
-    function renderShoppingList() {
-      const container = document.getElementById('shoppingListContainer');
-      const needed = pantry.filter(i => i.qty <= i.lowThreshold);
-
-      if(needed.length === 0) {
-        container.innerHTML = `<li class="text-xs text-slate-400 py-2">All pantry items are fully stocked! 🎉</li>`;
+    function renderCookingLog() {
+      const container = document.getElementById('cookingLogContainer');
+      if (cookingLog.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 italic">No cooking logs recorded yet.</p>`;
         return;
       }
 
-      container.innerHTML = needed.map(i => `
-        <li class="p-3 bg-amber-50/60 rounded-xl border border-amber-100 flex items-center justify-between text-xs font-bold text-amber-900">
-          <span>${i.name}</span>
-          <span class="text-rose-600">${i.qty === 0 ? 'Out of Stock' : 'Low Stock (' + i.qty + ' ' + i.unit + ')'}</span>
-        </li>
+      container.innerHTML = cookingLog.map(log => `
+        <div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-xs">
+          <div class="space-y-1">
+            <p class="font-black text-slate-800 text-sm">${log.dishName}</p>
+            <p class="text-slate-500">Cooked by <span class="font-bold text-amber-800">${log.cookedBy}</span> • ${log.servings} serving(s)</p>
+          </div>
+          <div class="text-right text-[11px] text-slate-400 font-bold">
+            <p>${log.time}</p>
+            <p>${log.date}</p>
+          </div>
+        </div>
       `).join('');
     }
 
-    function copyShoppingList() {
-      const needed = pantry.filter(i => i.qty <= i.lowThreshold).map(i => `- ${i.name} (${i.qty} ${i.unit})`).join('\n');
-      navigator.clipboard.writeText("D'Angelo Household Shopping List:\n" + needed);
-      alert("Shopping list copied to clipboard!");
+    // --- MOMENTS FEED LOGIC ---
+
+    function renderFeed() {
+      const container = document.getElementById('feedPostsContainer');
+      container.innerHTML = feedPosts.map(post => `
+        <div class="bg-white rounded-3xl p-5 border border-amber-100 shadow-xs space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <img src="${post.avatar}" class="w-10 h-10 rounded-full object-cover border border-amber-200">
+              <div>
+                <h4 class="font-extrabold text-slate-800 text-sm">${post.author}</h4>
+                <p class="text-[11px] text-slate-400 font-semibold">${post.time}</p>
+              </div>
+            </div>
+            <button onclick="deletePost(${post.id})" class="text-slate-300 hover:text-rose-500 text-xs p-1">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+
+          <p class="text-slate-700 text-sm leading-relaxed">${post.text}</p>
+
+          ${post.image ? `<div class="rounded-2xl overflow-hidden max-h-96 bg-slate-100"><img src="${post.image}" class="w-full h-full object-cover"></div>` : ''}
+
+          <div class="flex items-center space-x-4 pt-2 border-t border-slate-100">
+            <button onclick="likePost(${post.id})" class="text-xs font-bold text-amber-700 hover:text-amber-800 flex items-center space-x-1.5 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200/50">
+              <i class="fa-solid fa-heart text-rose-500"></i>
+              <span>${post.likes} Likes</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
     }
 
-    function handlePostImageSelect(event) {
-      const file = event.target.files[0];
-      if(file) {
-        compressImage(file, 800, 0.8, function(compressedUrl) {
-          tempPostImage = compressedUrl;
-          document.getElementById('postImagePreview').src = compressedUrl;
-          document.getElementById('postImagePreviewContainer').classList.remove('hidden');
-        });
-      }
+    function handlePostImageSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      compressImage(file, 1000, 0.7, (base64) => {
+        tempPostImage = base64;
+        document.getElementById('postImagePreview').src = base64;
+        document.getElementById('postImagePreviewContainer').classList.remove('hidden');
+      });
     }
 
     function removePostImage() {
       tempPostImage = null;
+      document.getElementById('postImageFileInput').value = '';
       document.getElementById('postImagePreviewContainer').classList.add('hidden');
     }
 
     function createNewPost() {
       const text = document.getElementById('postInputText').value.trim();
-      if(!text && !tempPostImage) return;
+      if (!text && !tempPostImage) { alert("Please write a message or add a photo."); return; }
 
       const newPost = {
         id: Date.now(),
         author: currentUser.name,
         avatar: currentUser.avatar,
-        text: text,
+        text,
         image: tempPostImage,
         likes: 0,
         time: "Just now"
@@ -725,46 +861,31 @@
 
       feedPosts.unshift(newPost);
       localStorage.setItem('dangelo_feed', JSON.stringify(feedPosts));
-      
+
       document.getElementById('postInputText').value = '';
       removePostImage();
       renderFeed();
     }
 
-    function renderFeed() {
-      const container = document.getElementById('feedPostsContainer');
-      container.innerHTML = feedPosts.map(p => `
-        <div class="bg-white rounded-3xl p-5 border border-amber-100 shadow-xs space-y-4">
-          <div class="flex items-center space-x-3">
-            <img src="${p.avatar}" class="w-10 h-10 rounded-full object-cover border border-amber-200">
-            <div>
-              <h4 class="font-bold text-slate-800 text-sm">${p.author}</h4>
-              <p class="text-[10px] font-semibold text-slate-400">${p.time} • D'Angelo Household</p>
-            </div>
-          </div>
-          <p class="text-slate-700 text-sm leading-relaxed">${p.text}</p>
-          ${p.image ? `<div class="rounded-2xl overflow-hidden max-h-80"><img src="${p.image}" class="w-full h-full object-cover"></div>` : ''}
-          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-500">
-            <button onclick="likePost(${p.id})" class="hover:text-amber-600 transition flex items-center space-x-1">
-              <i class="fa-regular fa-heart"></i> <span>${p.likes} Likes</span>
-            </button>
-            <span class="text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md text-[10px]">Family Moment</span>
-          </div>
-        </div>
-      `).join('');
+    function likePost(id) {
+      feedPosts = feedPosts.map(p => p.id === id ? { ...p, likes: p.likes + 1 } : p);
+      localStorage.setItem('dangelo_feed', JSON.stringify(feedPosts));
+      renderFeed();
     }
 
-    function likePost(id) {
-      const p = feedPosts.find(item => item.id === id);
-      if(p) {
-        p.likes++;
+    function deletePost(id) {
+      if (confirm("Delete this post?")) {
+        feedPosts = feedPosts.filter(p => p.id !== id);
         localStorage.setItem('dangelo_feed', JSON.stringify(feedPosts));
         renderFeed();
       }
     }
 
+    // --- PROFILE & HOUSEHOLD EDIT MODAL ---
+
     function openProfileModal() {
       document.getElementById('profileNameInput').value = currentUser.name;
+      document.getElementById('profileHouseholdNameInput').value = currentUser.householdName || "D'Angelo Family Household";
       document.getElementById('profileHouseholdInput').value = currentUser.household;
       document.getElementById('profileModalAvatarPreview').src = currentUser.avatar;
       tempProfileAvatar = currentUser.avatar;
@@ -775,40 +896,80 @@
       document.getElementById('profileModal').classList.add('hidden');
     }
 
-    // Profile Photo File Upload Handler with Auto-Compress
-    function handleProfileAvatarSelect(event) {
-      const file = event.target.files[0];
-      if (file) {
-        compressImage(file, 250, 0.8, function(compressedAvatarUrl) {
-          tempProfileAvatar = compressedAvatarUrl;
-          document.getElementById('profileModalAvatarPreview').src = compressedAvatarUrl;
-        });
-      }
+    function handleProfileAvatarSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      compressImage(file, 400, 0.7, (base64) => {
+        tempProfileAvatar = base64;
+        document.getElementById('profileModalAvatarPreview').src = base64;
+      });
     }
 
     function saveProfileSettings() {
-      currentUser.name = document.getElementById('profileNameInput').value.trim() || "Dwight D'Angelo";
-      currentUser.household = document.getElementById('profileHouseholdInput').value.trim() || "DANGELO-HOME";
-      currentUser.avatar = tempProfileAvatar || currentUser.avatar;
+      const name = document.getElementById('profileNameInput').value.trim();
+      const householdName = document.getElementById('profileHouseholdNameInput').value.trim();
+      const household = document.getElementById('profileHouseholdInput').value.trim().toUpperCase();
 
-      try {
-        localStorage.setItem('dangelo_user', JSON.stringify(currentUser));
-        syncUserUI();
-        closeProfileModal();
-        alert("Profile saved successfully!");
-      } catch (e) {
-        alert("Storage error: The selected profile photo is too large. Please select a smaller photo.");
-      }
+      if (!name) { alert("Please enter your name."); return; }
+
+      currentUser = {
+        name,
+        householdName: householdName || "My Family Household",
+        household: household || 'HOME',
+        avatar: tempProfileAvatar || currentUser.avatar
+      };
+
+      localStorage.setItem('dangelo_user', JSON.stringify(currentUser));
+      syncUserUI();
+      closeProfileModal();
     }
 
+    // --- QR MODAL ---
+
     function openQRModal() {
+      const qrContainer = document.getElementById('qrcode');
+      qrContainer.innerHTML = '';
+      document.getElementById('qrModalTitle').innerText = `${currentUser.householdName || 'Household'} QR`;
+
+      new QRCode(qrContainer, {
+        text: `HOUSEHOLD:${currentUser.household}|NAME:${currentUser.householdName}`,
+        width: 180,
+        height: 180,
+        colorDark: "#78350f",
+        colorLight: "#fffbeb"
+      });
+
       document.getElementById('qrModal').classList.remove('hidden');
-      document.getElementById('qrcode').innerHTML = "";
-      new QRCode(document.getElementById("qrcode"), { text: window.location.href, width: 150, height: 150 });
     }
 
     function closeQRModal() {
       document.getElementById('qrModal').classList.add('hidden');
+    }
+
+    // Utility: Image compressor helper for performance and localstorage friendliness
+    function compressImage(file, maxWidth, quality, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          callback(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
     }
   </script>
 </body>
