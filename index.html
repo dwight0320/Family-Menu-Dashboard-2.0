@@ -170,26 +170,27 @@
         <div id="feedPostsContainer" class="space-y-6"></div>
       </section>
 
-      <!-- TAB 2: DISHES -->
+      <!-- TAB 2: DISHES (CATEGORIZED MENU) -->
       <section id="view-dishes" class="hidden space-y-6">
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-amber-100 shadow-xs">
-          <div class="flex items-center space-x-2 bg-amber-50 p-1 rounded-xl">
-            <button onclick="setDishMealFilter('all')" id="dishFilter-all" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-600 text-white shadow-xs cursor-pointer">All Dishes</button>
-            <button onclick="setDishMealFilter('Agahan')" id="dishFilter-Agahan" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-amber-900 cursor-pointer">🌅 Agahan</button>
-            <button onclick="setDishMealFilter('Tanghalian')" id="dishFilter-Tanghalian" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-amber-900 cursor-pointer">☀️ Tanghalian</button>
+          <div class="flex items-center space-x-2 bg-amber-50 p-1 rounded-xl overflow-x-auto max-w-full">
+            <button onclick="setDishMealFilter('all')" id="dishFilter-all" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-600 text-white shadow-xs cursor-pointer whitespace-nowrap">All Categories</button>
+            <button onclick="setDishMealFilter('Agahan')" id="dishFilter-Agahan" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-amber-900 cursor-pointer whitespace-nowrap">🌅 Agahan</button>
+            <button onclick="setDishMealFilter('Tanghalian')" id="dishFilter-Tanghalian" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-amber-900 cursor-pointer whitespace-nowrap">☀️ Tanghalian</button>
+            <button onclick="setDishMealFilter('Dessert')" id="dishFilter-Dessert" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-amber-900 cursor-pointer whitespace-nowrap">🍮 Dessert</button>
           </div>
           <div class="flex items-center space-x-2 w-full sm:w-auto">
             <input type="text" id="dishSearchInput" oninput="renderDishes()" placeholder="Search dish..." class="flex-1 sm:w-48 px-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500">
-            <button onclick="openAddDishModal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center space-x-1.5 cursor-pointer">
+            <button onclick="openAddDishModal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center space-x-1.5 cursor-pointer whitespace-nowrap">
               <i class="fa-solid fa-plus"></i>
               <span>Add Dish</span>
             </button>
           </div>
         </div>
-        <div id="dishesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        <div id="dishesGrid" class="space-y-8"></div>
       </section>
 
-      <!-- TAB 3: PANTRY -->
+      <!-- TAB 3: PANTRY (CATEGORIZED STOCKS) -->
       <section id="view-pantry" class="hidden space-y-6">
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div class="bg-white p-4 rounded-2xl border border-amber-100 shadow-xs">
@@ -210,17 +211,17 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-3xl p-6 border border-amber-100 space-y-4">
-          <div class="flex items-center justify-between">
+        <div class="bg-white rounded-3xl p-6 border border-amber-100 space-y-6">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-4">
             <div>
               <h2 id="pantryTitle" class="text-lg font-black text-slate-800">My Personal Pantry Inventory</h2>
-              <p class="text-xs text-slate-500">Quickly add or decrease stocks in your house</p>
+              <p class="text-xs text-slate-500">Categorized stock management for your kitchen</p>
             </div>
             <button onclick="openAddPantryModal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition cursor-pointer">
               <i class="fa-solid fa-plus"></i> Add Item
             </button>
           </div>
-          <div id="pantryItemsContainer" class="divide-y divide-slate-100"></div>
+          <div id="pantryCategoriesContainer" class="space-y-6"></div>
         </div>
       </section>
 
@@ -238,7 +239,7 @@
         </div>
       </section>
 
-      <!-- TAB 5: LOG & LEFTOVERS (WITH REMOVE LEFTOVER CONTROLS) -->
+      <!-- TAB 5: LOG & LEFTOVERS -->
       <section id="view-log" class="hidden space-y-6">
         <div class="bg-cyan-900 text-white rounded-3xl p-6 space-y-4 shadow-md">
           <div class="flex items-center justify-between">
@@ -265,7 +266,31 @@
   </div>
 
   <!-- MODALS -->
-  <!-- ADD / EDIT DISH MODAL -->
+  <!-- RECIPE DETAIL MODAL -->
+  <div id="recipeModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar">
+      <div class="flex items-center justify-between">
+        <h3 id="recipeModalTitle" class="text-xl font-black text-slate-800">Dish Name</h3>
+        <button onclick="closeRecipeModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <img id="recipeModalImg" src="" class="w-full h-52 object-cover rounded-2xl">
+      <p id="recipeModalDesc" class="text-xs text-slate-600 leading-relaxed"></p>
+
+      <div class="space-y-4 border-t border-slate-100 pt-4">
+        <div>
+          <h4 class="text-xs font-extrabold uppercase tracking-wider text-amber-800 mb-2">🌿 Ingredients</h4>
+          <ul id="recipeModalIngredients" class="space-y-1.5 pl-2"></ul>
+        </div>
+        <div>
+          <h4 class="text-xs font-extrabold uppercase tracking-wider text-amber-800 mb-2">🍳 Step-by-Step Cooking Instructions</h4>
+          <ol id="recipeModalProcess" class="space-y-2 pl-4 list-decimal text-xs text-slate-700 leading-relaxed"></ol>
+        </div>
+      </div>
+      <button onclick="closeRecipeModal()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">Close Recipe</button>
+    </div>
+  </div>
+
+  <!-- ADD / EDIT DISH MODAL WITH CUSTOM INGREDIENTS & PROCESS EDITING -->
   <div id="addDishModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar">
       <div class="flex items-center justify-between">
@@ -276,26 +301,37 @@
       <div class="space-y-3">
         <div>
           <label class="text-xs font-bold text-slate-600">Dish Name</label>
-          <input type="text" id="newDishTitle" placeholder="e.g. Special Pork Adobo" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
+          <input type="text" id="newDishTitle" placeholder="e.g. Special Leche Flan" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="text-xs font-bold text-slate-600">Mealtime</label>
+            <label class="text-xs font-bold text-slate-600">Mealtime / Category</label>
             <select id="newDishMealtime" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
               <option value="Agahan">🌅 Agahan (Breakfast)</option>
               <option value="Tanghalian">☀️ Tanghalian (Lunch/Dinner)</option>
+              <option value="Dessert">🍮 Dessert (Pang-himagas)</option>
             </select>
           </div>
           <div>
             <label class="text-xs font-bold text-slate-600">Badge Tag</label>
-            <input type="text" id="newDishBadge" placeholder="e.g. ⭐ Family Favorite" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
+            <input type="text" id="newDishBadge" placeholder="e.g. 🍮 Sweet Treat" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
           </div>
         </div>
 
         <div>
           <label class="text-xs font-bold text-slate-600">Short Description</label>
-          <textarea id="newDishDesc" rows="2" placeholder="Brief details about this recipe..." class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl resize-none"></textarea>
+          <textarea id="newDishDesc" rows="2" placeholder="Brief details about this dish..." class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl resize-none"></textarea>
+        </div>
+
+        <div>
+          <label class="text-xs font-bold text-amber-900">Ingredients (1 per line)</label>
+          <textarea id="newDishIngredients" rows="3" placeholder="Firm Tokwa&#10;Fresh Kangkong&#10;Garlic cloves" class="w-full mt-1 p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl leading-relaxed font-mono"></textarea>
+        </div>
+
+        <div>
+          <label class="text-xs font-bold text-amber-900">Step-by-Step Cooking Instructions (1 per line)</label>
+          <textarea id="newDishProcess" rows="4" placeholder="1. Fry tokwa until golden.&#10;2. Sauté garlic and onions.&#10;3. Combine and serve hot." class="w-full mt-1 p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl leading-relaxed font-mono"></textarea>
         </div>
 
         <div class="space-y-2">
@@ -334,12 +370,22 @@
       <div class="space-y-3">
         <div>
           <label class="text-xs font-bold text-slate-600">Item Name</label>
-          <input type="text" id="pantryItemName" placeholder="e.g. Pork Liempo" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
+          <input type="text" id="pantryItemName" placeholder="e.g. Soy Sauce" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600">Category</label>
+          <select id="pantryItemCategory" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
+            <option value="Meat & Protein">🥩 Meat & Protein</option>
+            <option value="Vegetables & Produce">🥦 Vegetables & Produce</option>
+            <option value="Condiments & Sauces">🧂 Condiments & Sauces</option>
+            <option value="Spices & Seasonings">🌿 Spices & Seasonings</option>
+            <option value="Pantry Staples">📦 Pantry Staples</option>
+          </select>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="text-xs font-bold text-slate-600">Current Qty</label>
-            <input type="number" id="pantryItemQty" value="1" min="0" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
+            <input type="number" id="pantryItemQty" value="0" min="0" class="w-full mt-1 p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl font-semibold">
           </div>
           <div>
             <label class="text-xs font-bold text-slate-600">Unit Type</label>
@@ -377,7 +423,7 @@
 
       <div class="space-y-3 border-t border-slate-100 pt-3">
         <div class="space-y-1">
-          <label class="text-xs font-bold text-slate-700">Number of Servings Cooked:</label>
+          <label class="text-xs font-bold text-slate-700">Number of Servings Prepared:</label>
           <input type="number" id="cookServingsInput" value="1" min="1" max="20" class="w-full p-2 text-sm bg-slate-50 border border-slate-200 rounded-xl font-bold text-center">
         </div>
 
@@ -385,7 +431,7 @@
           <div class="flex items-center justify-between">
             <label for="hasLeftoverCheckbox" class="text-xs font-bold text-cyan-900 flex items-center space-x-2 cursor-pointer">
               <input type="checkbox" id="hasLeftoverCheckbox" onchange="toggleLeftoverQtyInput(this)" class="w-4 h-4 text-cyan-600 rounded focus:ring-cyan-500">
-              <span>🧊 Store Leftovers in Fridge?</span>
+              <span>🧊 Store Leftovers/Dessert in Fridge?</span>
             </label>
           </div>
           <div id="leftoverQtyBox" class="hidden items-center justify-between pt-1">
@@ -473,51 +519,399 @@
       console.warn("Firebase warning:", e);
     }
 
-    // DEFAULT DATASETS
+    // UNIQUE RECIPES FOR EVERY DISH
     const default22Dishes = [
-      { id: 1, title: "Stir-Fried Tokwa & Kangkong in Soy-Kalamansi", mealtime: "Agahan", badge: "🌱 Healthy High-Protein", desc: "Crispy fried tofu and fresh kangkong stems tossed in garlic soy-kalamansi sauce.", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80" },
-      { id: 2, title: "Spam & Kamote Kimchi-Style Stir-Fry", mealtime: "Agahan", badge: "🍳 Sweet & Savory", desc: "Crispy Korean Spam, sweet kamote cubes, onion, and eggs stir-fried together.", img: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80" },
-      { id: 3, title: "Potato & Kamote Tortang Giniling", mealtime: "Agahan", badge: "🍳 Egg Winner!", desc: "Savory egg omelet filled with spiced ground pork, potatoes, and sweet kamote.", img: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80" },
-      { id: 4, title: "Crispy Dilis, Fried Egg & Sliced Fresh Kamatis", mealtime: "Agahan", badge: "🐟 Crunchy Silog", desc: "Light, satisfying fried dilis platter served with a sunny-side egg and sliced tomatoes.", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80" },
-      { id: 5, title: "Sweet & Savory Spam & Kamote Hash", mealtime: "Agahan", badge: "🍟 Sweet & Crunchy", desc: "Pan-caramelized Spam cubes, sweet kamote, onions, and bell peppers.", img: "https://images.unsplash.com/photo-1584850125868-9a4c78bd8999?auto=format&fit=crop&w=600&q=80" },
-      { id: 6, title: "Saging Saba & Dilis Sweet-Salty Combo", mealtime: "Agahan", badge: "🍌 Filo Classic", desc: "Boiled or sautéed saging saba slices served alongside crispy salted dilis.", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80" },
-      { id: 7, title: "Egg & Spam Breakfast-for-Dinner Scramble", mealtime: "Agahan", badge: "⭐ Quick & Tasty", desc: "Soft scrambled eggs with diced Korean Spam and bell peppers.", img: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80" },
-      { id: 8, title: "Fish & Kamote Fries Platter", mealtime: "Agahan", badge: "🍟 Healthy Fries", desc: "Pan-fried fish fillet served alongside golden crispy sweet potato wedges.", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80" },
-      { id: 9, title: "Tokwa & Egg Stir-Fry with Kalamansi Drizzle", mealtime: "Agahan", badge: "🌱 High Protein", desc: "High-protein egg scramble with firm tofu cubes and fresh kalamansi citrus.", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80" },
-      { id: 10, title: "Tortang Kangkong & Tokwa Patties", mealtime: "Agahan", badge: "🥞 Veggie Patty", desc: "Chopped greens and mashed tofu bound with egg and pan-fried into crispy patties.", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80" },
-      { id: 11, title: "Sinangag, Crispy Tokwa & Sliced Tomato Salad", mealtime: "Agahan", badge: "🧄 Garlic Rice Combo", desc: "Garlic fried rice served with golden tofu blocks and fresh citrus tomato salad.", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80" },
-      { id: 12, title: "Crispy Kamote & Tokwa Fritters", mealtime: "Agahan", badge: "🍟 Crunchy Ukoy Style", desc: "Shredded sweet potato and firm tofu fried into crispy fritters with dip.", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80" },
-      { id: 13, title: "Tortang Dilis with Scallions", mealtime: "Agahan", badge: "🍳 Egg Winner!", desc: "Savory egg omelet packed with crispy dilis and scallions.", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80" },
-      { id: 14, title: "Ginisang Mongo with Kangkong & Crispy Dilis", mealtime: "Tanghalian", badge: "🥣 Warm Soup", desc: "Thick mung bean stew topped with crispy dilis and kangkong greens.", img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" },
-      { id: 15, title: "Pork Giniling & Tokwa Picadillo", mealtime: "Tanghalian", badge: "⭐ Kid Favorite", desc: "Sautéed ground pork, tokwa cubes, potato, and bell peppers in light soy sauce.", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" },
-      { id: 16, title: "Gabi & Kangkong Sinigang-Style Fish", mealtime: "Tanghalian", badge: "🥣 Sour Soup", desc: "Sour fish soup thickened with melted gabi root and loaded with kangkong leaves.", img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" },
-      { id: 17, title: "Ginisang Sayote with Giniling & Bell Peppers", mealtime: "Tanghalian", badge: "🌱 Veggie Delight", desc: "Crisp sayote squash stewed with juicy ground pork, garlic, and bell peppers.", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" },
-      { id: 18, title: "Pinangat na Isda in Kamatis & Kalamansi", mealtime: "Tanghalian", badge: "🐟 Citrus Fish", desc: "Simmered fish in ripe tomatoes, ginger, kalamansi juice, and sayote slices.", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80" },
-      { id: 19, title: "Crispy Tokwa Boats with Giniling Filling", mealtime: "Tanghalian", badge: "⭐ Kid Favorite", desc: "Hollowed tofu blocks stuffed with seasoned ground pork and pan-fried golden.", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80" },
-      { id: 20, title: "Creamy Pork & Gabi Stew with Greens", mealtime: "Tanghalian", badge: "🥣 Rich Stew", desc: "Slow-boiled pork chunks in thick gabi broth topped with fresh kangkong.", img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" },
-      { id: 21, title: "Pesang Isda with Sayote, Ginger & Potatoes", mealtime: "Tanghalian", badge: "🥣 Ginger Soup", desc: "Comforting ginger fish soup loaded with sayote squash and potatoes.", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80" },
-      { id: 22, title: "Pork & Potato Ginisang Sayote", mealtime: "Tanghalian", badge: "🌱 Veggie Stew", desc: "Sautéed chayote squash cooked with pork slices, garlic, onions, and potatoes.", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" }
+      { 
+        id: 1, 
+        title: "Stir-Fried Tokwa & Kangkong in Soy-Kalamansi", 
+        mealtime: "Agahan", 
+        badge: "🌱 Healthy High-Protein", 
+        desc: "Crispy fried tofu and fresh kangkong stems tossed in garlic soy-kalamansi sauce.", 
+        img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["2 blocks Firm Tokwa (Tofu)", "1 bunch Fresh Kangkong Stems & Leaves", "4 cloves Garlic, minced", "2 tbsp Soy Sauce", "1 tbsp Kalamansi Juice", "2 tbsp Cooking Oil"],
+        process: [
+          "Slice the firm tokwa into cubes and pan-fry in hot oil until golden and crispy on all sides. Remove from pan and set aside.",
+          "Sauté minced garlic in the remaining oil over medium heat until fragrant and slightly golden.",
+          "Add kangkong stems first, stirring for 1 minute before tossing in the leafy greens.",
+          "Drizzle soy sauce and freshly squeezed kalamansi juice over the pan.",
+          "Fold in the fried tokwa, toss quickly for 30 seconds, and serve hot."
+        ]
+      },
+      { 
+        id: 2, 
+        title: "Spam & Kamote Kimchi-Style Stir-Fry", 
+        mealtime: "Agahan", 
+        badge: "🍳 Sweet & Savory", 
+        desc: "Crispy Korean Spam, sweet kamote cubes, onion, and eggs stir-fried together.", 
+        img: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["1 can Korean Spam, cubed", "1 medium Sweet Kamote, peeled & diced", "1 small White Onion, sliced", "2 large Eggs", "Salt & Black Pepper to taste"],
+        process: [
+          "Steam or boil diced kamote in water for 5 minutes until tender, then drain.",
+          "Pan-fry Korean Spam cubes in a dry skillet over medium-high heat until caramelized and crispy.",
+          "Add sliced onions and tender kamote cubes into the pan, cooking together for 3 minutes.",
+          "Push Spam and kamote to one side of the skillet. Crack eggs into the empty side.",
+          "Softly scramble the eggs until set, then mix everything together and season with black pepper."
+        ]
+      },
+      { 
+        id: 3, 
+        title: "Potato & Kamote Tortang Giniling", 
+        mealtime: "Agahan", 
+        badge: "🍳 Egg Winner!", 
+        desc: "Savory egg omelet filled with spiced ground pork, potatoes, and sweet kamote.", 
+        img: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["200g Ground Pork (Giniling)", "1 medium Potato, finely diced", "1 small Sweet Kamote, finely diced", "3 large Eggs", "1 tbsp Soy Sauce", "1 pinch Black Pepper"],
+        process: [
+          "Sauté ground pork with diced potatoes and kamote in a oiled pan over medium heat until cooked through (around 6-8 mins).",
+          "Whisk eggs in a bowl with soy sauce and black pepper.",
+          "Pour the beaten eggs evenly over the cooked pork and root crop mixture in the pan.",
+          "Cover and cook over medium-low heat until the bottom is set and golden.",
+          "Flip carefully using a plate and cook the other side for 2 minutes."
+        ]
+      },
+      { 
+        id: 4, 
+        title: "Crispy Dilis, Fried Egg & Sliced Fresh Kamatis", 
+        mealtime: "Agahan", 
+        badge: "🐟 Crunchy Silog", 
+        desc: "Light, satisfying fried dilis platter served with a sunny-side egg and sliced tomatoes.", 
+        img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["1 cup Dried Dilis (Anchovies)", "2 Eggs", "2 Ripe Kamatis (Tomatoes), sliced", "2 cups Garlic Rice", "Oil for deep frying"],
+        process: [
+          "Rinse dried dilis quickly in water and pat thoroughly dry with paper towels.",
+          "Heat oil in a pan and deep-fry dilis for 1-2 minutes until crunchy and golden brown. Drain excess oil on paper towels.",
+          "In a separate non-stick skillet, fry eggs sunny-side up.",
+          "Platter the crunchy dilis alongside garlic fried rice, sunny eggs, and fresh sliced tomatoes."
+        ]
+      },
+      { 
+        id: 5, 
+        title: "Sweet & Savory Spam & Kamote Hash", 
+        mealtime: "Agahan", 
+        badge: "🍟 Sweet & Crunchy", 
+        desc: "Pan-caramelized Spam cubes, sweet kamote, onions, and bell peppers.", 
+        img: "https://images.unsplash.com/photo-1584850125868-9a4c78bd8999?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["1/2 can Korean Spam, diced", "1 large Kamote, cut into small cubes", "1/2 Bell Pepper, diced", "1/2 Onion, diced", "1 tbsp Butter"],
+        process: [
+          "Par-boil kamote cubes in boiling salted water for 3-4 minutes, then drain thoroughly.",
+          "Melt butter in a skillet over medium heat and sauté onions and bell peppers until translucent.",
+          "Add diced Spam and par-boiled kamote cubes to the skillet.",
+          "Press hash down flat with a spatula and sear for 3 minutes without stirring to build a crispy crust.",
+          "Flip sections over and crisp the other side before serving warm."
+        ]
+      },
+      { 
+        id: 6, 
+        title: "Saging Saba & Dilis Sweet-Salty Combo", 
+        mealtime: "Agahan", 
+        badge: "🍌 Filo Classic", 
+        desc: "Boiled or sautéed saging saba slices served alongside crispy salted dilis.", 
+        img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["4 pcs Saging Saba (Plantains)", "1/2 cup Dried Salted Dilis", "1 tbsp Butter", "1 tbsp Brown Sugar"],
+        process: [
+          "Boil unpeeled saging saba in water for 10 minutes until tender. Peel and slice into diagonal rounds.",
+          "Pan-sear banana slices in butter and brown sugar for 2 minutes until glossy and caramelized.",
+          "In a separate pan, flash-fry dried salted dilis until crispy.",
+          "Plate warm sweet plantain slices with crunchy salty dilis for a classic contrast."
+        ]
+      },
+      { 
+        id: 7, 
+        title: "Egg & Spam Breakfast-for-Dinner Scramble", 
+        mealtime: "Agahan", 
+        badge: "⭐ Quick & Tasty", 
+        desc: "Soft scrambled eggs with diced Korean Spam and bell peppers.", 
+        img: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["1/2 can Korean Spam, small cubes", "3 Eggs", "1/2 Bell Pepper, finely chopped", "1 tbsp Butter", "2 tbsp Milk"],
+        process: [
+          "Sauté diced Spam in a dry skillet over medium heat for 4 minutes until golden.",
+          "Whisk eggs with milk and a pinch of pepper until bubbly.",
+          "Melt butter into the pan with Spam, reduce heat to low, and pour whisked eggs over.",
+          "Gently fold and push eggs from edge to center until soft curds form.",
+          "Remove immediately from heat while soft and serve."
+        ]
+      },
+      { 
+        id: 8, 
+        title: "Fish & Kamote Fries Platter", 
+        mealtime: "Agahan", 
+        badge: "🍟 Healthy Fries", 
+        desc: "Pan-fried fish fillet served alongside golden crispy sweet potato wedges.", 
+        img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["2 Fish Fillets (Cream Dory or Tilapia)", "2 Sweet Kamote, sliced into fries", "2 pcs Kalamansi", "Salt & Black Pepper", "1/2 cup Cornstarch"],
+        process: [
+          "Season fish fillets with salt, black pepper, and fresh kalamansi juice.",
+          "Toss kamote fries in cornstarch and deep-fry in hot oil until crunchy and golden brown.",
+          "Dredge fish fillets lightly in remaining cornstarch and pan-fry for 3-4 minutes per side until crisp.",
+          "Drain both on paper towels and serve hot with garlic dipping sauce."
+        ]
+      },
+      { 
+        id: 9, 
+        title: "Tokwa & Egg Stir-Fry with Kalamansi Drizzle", 
+        mealtime: "Agahan", 
+        badge: "🌱 High Protein", 
+        desc: "High-protein egg scramble with firm tofu cubes and fresh kalamansi citrus.", 
+        img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["2 blocks Firm Tokwa, cubed", "3 Eggs", "3 pcs Kalamansi", "1 tbsp Soy Sauce", "2 stalks Green Onions, sliced"],
+        process: [
+          "Fry tokwa cubes in hot oil until crispy on all sides, then drain on paper towels.",
+          "Pour beaten eggs into a hot non-stick pan over medium heat.",
+          "Add fried tokwa cubes over the setting eggs and scramble gently together for 2 minutes.",
+          "Drizzle with soy sauce and freshly squeezed kalamansi juice.",
+          "Garnish with green onions and serve warm."
+        ]
+      },
+      { 
+        id: 10, 
+        title: "Tortang Kangkong & Tokwa Patties", 
+        mealtime: "Agahan", 
+        badge: "🥞 Veggie Patty", 
+        desc: "Chopped greens and mashed tofu bound with egg and pan-fried into crispy patties.", 
+        img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["1 cup Kangkong leaves, finely chopped", "1 block Tokwa, mashed", "1 Egg", "2 tbsp Flour", "1 tsp Salt & Pepper"],
+        process: [
+          "In a bowl, combine mashed tokwa, chopped kangkong, egg, flour, salt, and pepper.",
+          "Mix thoroughly until a cohesive batter forms.",
+          "Heat oil in a skillet over medium heat.",
+          "Scoop spoonfuls of batter into the pan and flatten with a spatula into patties.",
+          "Fry for 3 minutes per side until golden brown and crispy."
+        ]
+      },
+      { 
+        id: 11, 
+        title: "Sinangag, Crispy Tokwa & Sliced Tomato Salad", 
+        mealtime: "Agahan", 
+        badge: "🧄 Garlic Rice Combo", 
+        desc: "Garlic fried rice served with golden tofu blocks and fresh citrus tomato salad.", 
+        img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["2 cups Leftover Rice", "4 cloves Garlic, minced", "2 blocks Tokwa, cut into thick slabs", "2 Kamatis, sliced", "1 tbsp Vinegar"],
+        process: [
+          "Fry minced garlic in oil until crunchy and golden brown. Add leftover rice and break up lumps, tossing for 5 minutes to make sinangag.",
+          "In another pan, deep-fry tokwa slabs until crispy.",
+          "Toss sliced tomatoes with vinegar, chopped onions, and salt for the salad.",
+          "Serve garlic rice alongside crispy tokwa slabs and citrus tomato salad."
+        ]
+      },
+      { 
+        id: 12, 
+        title: "Crispy Kamote & Tokwa Fritters", 
+        mealtime: "Agahan", 
+        badge: "🍟 Crunchy Ukoy Style", 
+        desc: "Shredded sweet potato and firm tofu fried into crispy fritters with dip.", 
+        img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["1 cup Shredded Kamote", "1/2 cup Diced Tokwa", "1/3 cup Cornstarch", "1/4 cup Cold Water", "Garlic Vinegar Dip"],
+        process: [
+          "Whisk cornstarch, cold water, salt, and pepper together to create a light batter.",
+          "Fold in shredded sweet potato and small diced tokwa.",
+          "Ladle small clusters into hot frying oil.",
+          "Deep-fry for 3-4 minutes until golden and extra crunchy.",
+          "Serve immediately with spiced garlic vinegar dip."
+        ]
+      },
+      { 
+        id: 13, 
+        title: "Tortang Dilis with Scallions", 
+        mealtime: "Agahan", 
+        badge: "🍳 Egg Winner!", 
+        desc: "Savory egg omelet packed with crispy dilis and scallions.", 
+        img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["1/2 cup Dried Dilis", "3 Eggs", "2 stalks Scallions, chopped", "1 tsp Fish Sauce (Patis)"],
+        process: [
+          "Quickly toast dried dilis in a dry pan for 1-2 minutes until crispy.",
+          "Beat eggs with fish sauce and chopped scallions in a bowl, then stir in the toasted dilis.",
+          "Heat oil in a skillet and pour in the omelet mixture.",
+          "Cook over medium heat until set, flip, and brown the opposite side for 1 minute."
+        ]
+      },
+      { 
+        id: 14, 
+        title: "Ginisang Mongo with Kangkong & Crispy Dilis", 
+        mealtime: "Tanghalian", 
+        badge: "🥣 Warm Soup", 
+        desc: "Thick mung bean stew topped with crispy dilis and kangkong greens.", 
+        img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["1 cup Dried Mongo (Mung Beans)", "1 bunch Kangkong", "1/2 cup Dried Dilis", "1 Onion & 3 cloves Garlic", "2 Kamatis, chopped"],
+        process: [
+          "Boil mongo beans in 4 cups of water for 30 minutes until soft and mashed.",
+          "In a separate pot, sauté garlic, onion, and chopped tomatoes until softened.",
+          "Pour cooked mongo beans and broth into the aromatics pot. Simmer for 10 minutes.",
+          "Stir in kangkong leaves during the last 2 minutes.",
+          "Fry dilis separately until crispy and scatter on top before serving."
+        ]
+      },
+      { 
+        id: 15, 
+        title: "Pork Giniling & Tokwa Picadillo", 
+        mealtime: "Tanghalian", 
+        badge: "⭐ Kid Favorite", 
+        desc: "Sautéed ground pork, tokwa cubes, potato, and bell peppers in light soy sauce.", 
+        img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["250g Ground Pork", "1 block Tokwa, cubed & fried", "1 Potato, diced", "1/2 cup Tomato Sauce", "1 tbsp Soy Sauce"],
+        process: [
+          "Sauté garlic and onions, then add ground pork and cook until browned.",
+          "Add diced potatoes and stir-fry for 3 minutes.",
+          "Pour in tomato sauce, soy sauce, and 1/2 cup water. Simmer covered for 8 minutes.",
+          "Add fried tokwa cubes and cook uncovered for 2 minutes until sauce thickens."
+        ]
+      },
+      { 
+        id: 16, 
+        title: "Gabi & Kangkong Sinigang-Style Fish", 
+        mealtime: "Tanghalian", 
+        badge: "🥣 Sour Soup", 
+        desc: "Sour fish soup thickened with melted gabi root and loaded with kangkong leaves.", 
+        img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["400g Fish Fillet/Chunks", "3 pcs Gabi root, peeled & cubed", "1 pack Tamarind (Sinigang) Mix", "1 bunch Kangkong", "2 Kamatis"],
+        process: [
+          "Boil water with gabi root and tomatoes for 15 minutes until gabi is soft and mashable.",
+          "Stir in tamarind sinigang mix base.",
+          "Gently add fish chunks and simmer over low heat for 5-7 minutes.",
+          "Turn off heat, throw in kangkong leaves, cover pot, and steep for 2 minutes."
+        ]
+      },
+      { 
+        id: 17, 
+        title: "Ginisang Sayote with Giniling & Bell Peppers", 
+        mealtime: "Tanghalian", 
+        badge: "🌱 Veggie Delight", 
+        desc: "Crisp sayote squash stewed with juicy ground pork, garlic, and bell peppers.", 
+        img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["2 pcs Sayote, peeled & julienned", "150g Ground Pork", "1/2 Bell Pepper, sliced", "3 cloves Garlic, minced", "1 tbsp Fish Sauce"],
+        process: [
+          "Sauté garlic, onion, and ground pork until pork is browned.",
+          "Season with fish sauce and black pepper.",
+          "Add julienned sayote and bell pepper strips.",
+          "Splash in 3 tablespoons of water, cover, and steam cook for 5 minutes until tender-crisp."
+        ]
+      },
+      { 
+        id: 18, 
+        title: "Pinangat na Isda in Kamatis & Kalamansi", 
+        mealtime: "Tanghalian", 
+        badge: "🐟 Citrus Fish", 
+        desc: "Simmered fish in ripe tomatoes, ginger, kalamansi juice, and sayote slices.", 
+        img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["1 whole Fish (or 400g Fillets)", "4 Ripe Kamatis, sliced", "1 thumb Ginger, sliced into strips", "3 tbsp Kalamansi Juice", "1 Sayote, sliced"],
+        process: [
+          "Layer half of the sliced tomatoes, ginger, and sayote at the bottom of a pot.",
+          "Place fish on top and cover with remaining tomatoes and ginger.",
+          "Pour kalamansi juice, 1 cup water, and 1 tbsp patis over top.",
+          "Cover and simmer over low heat for 15 minutes until broth turns rich and fragrant."
+        ]
+      },
+      { 
+        id: 19, 
+        title: "Crispy Tokwa Boats with Giniling Filling", 
+        mealtime: "Tanghalian", 
+        badge: "⭐ Kid Favorite", 
+        desc: "Hollowed tofu blocks stuffed with seasoned ground pork and pan-fried golden.", 
+        img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["3 thick Firm Tokwa blocks", "150g Cooked Ground Pork", "1 Egg, beaten", "2 tbsp Cornstarch"],
+        process: [
+          "Slice tokwa blocks in half and hollow out centers to make pocket 'boats'.",
+          "Mix cooked ground pork with leftover hollowed tokwa bits and cornstarch.",
+          "Stuff filling firmly inside tokwa pockets.",
+          "Dip top opening in beaten egg wash and pan-fry filling side down first, then crisp all sides."
+        ]
+      },
+      { 
+        id: 20, 
+        title: "Creamy Pork & Gabi Stew with Greens", 
+        mealtime: "Tanghalian", 
+        badge: "🥣 Rich Stew", 
+        desc: "Slow-boiled pork chunks in thick gabi broth topped with fresh kangkong.", 
+        img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["300g Pork Chunks", "4 pcs Gabi root", "1 bunch Kangkong", "1 tbsp Patis", "1 Onion"],
+        process: [
+          "Boil pork chunks and onions in water for 25 minutes until tender.",
+          "Add peeled gabi root and simmer for another 15 minutes until gabi starts to melt and thicken the broth.",
+          "Season with patis and black pepper.",
+          "Stir in kangkong leaves during the final minute of cooking."
+        ]
+      },
+      { 
+        id: 21, 
+        title: "Pesang Isda with Sayote, Ginger & Potatoes", 
+        mealtime: "Tanghalian", 
+        badge: "🥣 Ginger Soup", 
+        desc: "Comforting ginger fish soup loaded with sayote squash and potatoes.", 
+        img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["400g Fish Fillets", "2 thumbs Ginger, julienned", "1 Sayote, sliced", "1 Potato, cubed", "1 tsp Whole Peppercorns"],
+        process: [
+          "Sauté julienned ginger and onion in a pot until fragrant.",
+          "Add 4 cups of water, potato cubes, whole peppercorns, and bring to boil for 8 minutes.",
+          "Add sayote slices and cook for 3 minutes.",
+          "Gently slide fish fillets into boiling soup and simmer for 5 minutes until cooked."
+        ]
+      },
+      { 
+        id: 22, 
+        title: "Pork & Potato Ginisang Sayote", 
+        mealtime: "Tanghalian", 
+        badge: "🌱 Veggie Stew", 
+        desc: "Sautéed chayote squash cooked with pork slices, garlic, onions, and potatoes.", 
+        img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["150g Pork Slices", "2 Sayote, sliced", "1 Potato, sliced", "3 cloves Garlic", "1 tbsp Soy Sauce"],
+        process: [
+          "Sear pork slices in a hot pan until fat renders and pork browns.",
+          "Add garlic and onions, sautéing until fragrant.",
+          "Add potato slices, sayote, and soy sauce.",
+          "Cover and simmer on medium heat for 6-8 minutes until tender."
+        ]
+      },
+      { 
+        id: 23, 
+        title: "Special Leche Flan", 
+        mealtime: "Dessert", 
+        badge: "🍮 Sweet Treat", 
+        desc: "Rich and creamy caramelized custard dessert loved by everyone.", 
+        img: "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["10 Egg Yolks", "1 can Condensed Milk", "1 can Evaporated Milk", "1/2 cup Sugar (for caramel)"],
+        process: [
+          "Melt sugar in llanera molds over low stovetop flame until turned into golden caramel. Allow to cool and harden.",
+          "Gently whisk egg yolks, condensed milk, and evaporated milk in a bowl in one direction without creating bubbles.",
+          "Strain mixture through cheesecloth or fine sieve twice into caramelized molds.",
+          "Cover tightly with aluminum foil and steam for 30 minutes until firm.",
+          "Chill thoroughly before unmolding."
+        ]
+      },
+      { 
+        id: 24, 
+        title: "Saging Saba con Hielo", 
+        mealtime: "Dessert", 
+        badge: "🍧 Refreshing", 
+        desc: "Sweet plantain bananas served with shaved ice, milk, and brown sugar syrup.", 
+        img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=600&q=80",
+        ingredients: ["4 pcs Saging Saba, sliced", "1/2 cup Brown Sugar", "1 cup Water", "Shaved Ice", "Evaporated Milk"],
+        process: [
+          "Combine water and brown sugar in a pot over medium heat to form a syrup.",
+          "Add sliced saging saba and simmer for 15 minutes until bananas are soft and candied.",
+          "Let candied plantains cool.",
+          "Fill tall glasses with shaved ice, top with candied plantain slices and syrup, then drizzle evaporated milk over."
+        ]
+      }
     ];
 
     const defaultPantry = [
-      { id: 1, name: 'Pork Liempo / Chunks', qty: 3, unit: 'containers', lowThreshold: 1 },
-      { id: 2, name: 'Fish Fillet', qty: 2, unit: 'containers', lowThreshold: 1 },
-      { id: 3, name: 'Egg', qty: 12, unit: 'pcs', lowThreshold: 4 },
-      { id: 4, name: 'Giniling (Ground Pork)', qty: 4, unit: 'containers', lowThreshold: 1 },
-      { id: 5, name: 'Korean Spam', qty: 2, unit: 'pcs', lowThreshold: 1 },
-      { id: 6, name: 'Firm Tokwa', qty: 4, unit: 'pcs', lowThreshold: 1 },
-      { id: 7, name: 'Dilis', qty: 2, unit: 'packs', lowThreshold: 1 },
-      { id: 8, name: 'Sayote', qty: 3, unit: 'pcs', lowThreshold: 1 },
-      { id: 9, name: 'Kangkong', qty: 2, unit: 'tali', lowThreshold: 1 },
-      { id: 10, name: 'Gabi', qty: 4, unit: 'pcs', lowThreshold: 1 },
-      { id: 11, name: 'Kamatis', qty: 6, unit: 'pcs', lowThreshold: 2 },
-      { id: 12, name: 'Kalamansi', qty: 10, unit: 'pcs', lowThreshold: 3 },
-      { id: 13, name: 'Saging Saba', qty: 5, unit: 'pcs', lowThreshold: 2 },
-      { id: 14, name: 'Potato', qty: 4, unit: 'pcs', lowThreshold: 1 },
-      { id: 15, name: 'Kamote', qty: 3, unit: 'pcs', lowThreshold: 1 },
-      { id: 16, name: 'Ginger', qty: 1, unit: 'pcs', lowThreshold: 1 },
-      { id: 17, name: 'Bell Pepper', qty: 2, unit: 'pcs', lowThreshold: 1 },
-      { id: 18, name: 'Mongo', qty: 1, unit: 'packs', lowThreshold: 1 }
+      { id: 1, name: 'Pork Liempo / Chunks', category: 'Meat & Protein', qty: 0, unit: 'containers', lowThreshold: 1 },
+      { id: 2, name: 'Fish Fillet', category: 'Meat & Protein', qty: 0, unit: 'containers', lowThreshold: 1 },
+      { id: 3, name: 'Egg', category: 'Meat & Protein', qty: 0, unit: 'pcs', lowThreshold: 4 },
+      { id: 4, name: 'Giniling (Ground Pork)', category: 'Meat & Protein', qty: 0, unit: 'containers', lowThreshold: 1 },
+      { id: 5, name: 'Korean Spam', category: 'Meat & Protein', qty: 0, unit: 'pcs', lowThreshold: 1 },
+      { id: 6, name: 'Firm Tokwa', category: 'Meat & Protein', qty: 0, unit: 'pcs', lowThreshold: 1 },
+      { id: 7, name: 'Dilis', category: 'Meat & Protein', qty: 0, unit: 'packs', lowThreshold: 1 },
+      { id: 8, name: 'Sayote', category: 'Vegetables & Produce', qty: 0, unit: 'pcs', lowThreshold: 1 },
+      { id: 9, name: 'Kangkong', category: 'Vegetables & Produce', qty: 0, unit: 'tali', lowThreshold: 1 },
+      { id: 10, name: 'Gabi', category: 'Vegetables & Produce', qty: 0, unit: 'pcs', lowThreshold: 1 },
+      { id: 11, name: 'Kamatis', category: 'Vegetables & Produce', qty: 0, unit: 'pcs', lowThreshold: 2 },
+      { id: 12, name: 'Kalamansi', category: 'Vegetables & Produce', qty: 0, unit: 'pcs', lowThreshold: 3 },
+      { id: 13, name: 'Saging Saba', category: 'Vegetables & Produce', qty: 0, unit: 'pcs', lowThreshold: 2 },
+      { id: 14, name: 'Potato', category: 'Vegetables & Produce', qty: 0, unit: 'pcs', lowThreshold: 1 },
+      { id: 15, name: 'Kamote', category: 'Vegetables & Produce', qty: 0, unit: 'pcs', lowThreshold: 1 },
+      { id: 16, name: 'Ginger', category: 'Spices & Seasonings', qty: 0, unit: 'pcs', lowThreshold: 1 },
+      { id: 17, name: 'Bell Pepper', category: 'Vegetables & Produce', qty: 0, unit: 'pcs', lowThreshold: 1 },
+      { id: 18, name: 'Mongo', category: 'Pantry Staples', qty: 0, unit: 'packs', lowThreshold: 1 }
     ];
 
     let pantry = [...defaultPantry];
@@ -680,7 +1074,26 @@
         if (doc.exists) {
           const data = doc.data();
           pantry = (data.pantry && data.pantry.length) ? data.pantry : defaultPantry;
-          dishes = (data.dishes && data.dishes.length) ? data.dishes : default22Dishes;
+          
+          pantry = pantry.map(item => {
+            if (!item.category || item.category === 'Pantry Staples') {
+              const match = defaultPantry.find(dp => dp.name.toLowerCase() === item.name.toLowerCase());
+              return { ...item, category: match ? match.category : 'Pantry Staples' };
+            }
+            return item;
+          });
+
+          // Sync dishes with default detailed recipes if process/ingredients are missing
+          let userDishes = (data.dishes && data.dishes.length) ? data.dishes : default22Dishes;
+          dishes = userDishes.map(ud => {
+            const defMatch = default22Dishes.find(d => d.id === ud.id);
+            return {
+              ...ud,
+              ingredients: ud.ingredients || (defMatch ? defMatch.ingredients : ["Ingredients not specified"]),
+              process: ud.process || (defMatch ? defMatch.process : ["Cooking process not specified"])
+            };
+          });
+
           cookingLog = data.cookingLog || [];
           leftovers = data.leftovers || [];
           renderDishes(); renderPantry(); renderCookingLog(); renderLeftovers();
@@ -715,7 +1128,7 @@
 
     // --- PANTRY TRACKER CONTROLS ---
     function renderPantry() {
-      const container = document.getElementById('pantryItemsContainer');
+      const container = document.getElementById('pantryCategoriesContainer');
       if (!container) return;
       
       let total = pantry.length, inStock = 0, lowStock = 0, outStock = 0;
@@ -730,29 +1143,52 @@
       document.getElementById('statLowStock').innerText = lowStock;
       document.getElementById('statOutOfStock').innerText = outStock;
 
-      container.innerHTML = pantry.map(item => {
-        let statusBadge = item.qty <= 0 
-          ? `<span class="bg-rose-100 text-rose-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md">Out of Stock</span>`
-          : (item.qty <= item.lowThreshold 
-            ? `<span class="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2 py-0.5 rounded-md">Low Stock</span>`
-            : `<span class="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2 py-0.5 rounded-md">In Stock</span>`);
+      const categories = ["Meat & Protein", "Vegetables & Produce", "Condiments & Sauces", "Spices & Seasonings", "Pantry Staples"];
+
+      container.innerHTML = categories.map(cat => {
+        const itemsInCat = pantry.filter(i => (i.category || 'Pantry Staples') === cat);
+        if (itemsInCat.length === 0) return '';
+
+        let catIcon = '📦';
+        if (cat === 'Meat & Protein') catIcon = '🥩';
+        else if (cat === 'Vegetables & Produce') catIcon = '🥦';
+        else if (cat === 'Condiments & Sauces') catIcon = '🧂';
+        else if (cat === 'Spices & Seasonings') catIcon = '🌿';
 
         return `
-          <div class="py-3 flex items-center justify-between hover:bg-slate-50/80 px-2 rounded-xl transition">
-            <div class="space-y-0.5">
-              <div class="flex items-center space-x-2">
-                <span class="font-bold text-slate-800 text-sm">${item.name}</span>
-                ${statusBadge}
-              </div>
-              <p class="text-xs text-slate-400 font-medium">Alert threshold: <= ${item.lowThreshold} ${item.unit}</p>
-            </div>
-            <div class="flex items-center space-x-3">
-              <div class="flex items-center bg-slate-100 rounded-xl p-1 border border-slate-200">
-                <button onclick="updateStock(${item.id}, -1)" class="w-7 h-7 bg-white text-slate-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg font-black text-xs transition flex items-center justify-center cursor-pointer"><i class="fa-solid fa-minus"></i></button>
-                <span class="px-3 font-black text-xs text-slate-800 min-w-[3rem] text-center">${item.qty} <span class="text-[10px] text-slate-500 font-normal">${item.unit}</span></span>
-                <button onclick="updateStock(${item.id}, 1)" class="w-7 h-7 bg-amber-600 text-white hover:bg-amber-700 rounded-lg font-black text-xs transition flex items-center justify-center cursor-pointer"><i class="fa-solid fa-plus"></i></button>
-              </div>
-              <button onclick="deletePantryItem(${item.id})" class="text-slate-300 hover:text-rose-600 p-1.5 text-xs transition cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+          <div class="space-y-3 bg-slate-50/60 p-4 rounded-2xl border border-slate-100 shadow-xs">
+            <h3 class="font-extrabold text-amber-900 text-sm flex items-center space-x-2">
+              <span>${catIcon}</span>
+              <span>${cat}</span>
+              <span class="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">${itemsInCat.length}</span>
+            </h3>
+            <div class="divide-y divide-slate-200/60">
+              ${itemsInCat.map(item => {
+                let statusBadge = item.qty <= 0 
+                  ? `<span class="bg-rose-100 text-rose-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md">Out of Stock</span>`
+                  : (item.qty <= item.lowThreshold 
+                    ? `<span class="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2 py-0.5 rounded-md">Low Stock</span>`
+                    : `<span class="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2 py-0.5 rounded-md">In Stock</span>`);
+
+                return `
+                  <div class="py-2.5 flex items-center justify-between hover:bg-white/80 px-2 rounded-xl transition">
+                    <div class="space-y-0.5">
+                      <div class="flex items-center space-x-2">
+                        <span class="font-bold text-slate-800 text-sm">${item.name}</span>${statusBadge}
+                      </div>
+                      <p class="text-xs text-slate-400 font-medium">Alert threshold: <= ${item.lowThreshold}${item.unit}</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                      <div class="flex items-center bg-white rounded-xl p-1 border border-slate-200 shadow-xs">
+                        <button onclick="updateStock(${item.id}, -1)" class="w-7 h-7 bg-slate-50 text-slate-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg font-black text-xs transition flex items-center justify-center cursor-pointer"><i class="fa-solid fa-minus"></i></button>
+                        <span class="px-3 font-black text-xs text-slate-800 min-w-[3rem] text-center">${item.qty} <span class="text-[10px] text-slate-500 font-normal">${item.unit}</span></span>
+                        <button onclick="updateStock(${item.id}, 1)" class="w-7 h-7 bg-amber-600 text-white hover:bg-amber-700 rounded-lg font-black text-xs transition flex items-center justify-center cursor-pointer"><i class="fa-solid fa-plus"></i></button>
+                      </div>
+                      <button onclick="deletePantryItem(${item.id})" class="text-slate-300 hover:text-rose-600 p-1.5 text-xs transition cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
             </div>
           </div>
         `;
@@ -772,12 +1208,13 @@
 
     function savePantryItem() {
       const name = document.getElementById('pantryItemName').value.trim();
+      const category = document.getElementById('pantryItemCategory').value;
       const qty = parseInt(document.getElementById('pantryItemQty').value) || 0;
       const unit = document.getElementById('pantryItemUnit').value;
       const threshold = parseInt(document.getElementById('pantryItemThreshold').value) || 1;
       if (!name) return;
 
-      pantry.push({ id: Date.now(), name, qty, unit, lowThreshold: threshold });
+      pantry.push({ id: Date.now(), name, category, qty, unit, lowThreshold: threshold });
       savePersonalDataToFirestore();
       closeAddPantryModal();
       renderPantry();
@@ -823,8 +1260,11 @@
     // --- DISHES & MENU CONTROLS ---
     function setDishMealFilter(filter) {
       currentMealFilter = filter;
-      ['all', 'Agahan', 'Tanghalian'].forEach(f => {
-        document.getElementById(`dishFilter-${f}`).className = (f === filter) ? "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-600 text-white shadow-xs cursor-pointer" : "px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-amber-900 cursor-pointer";
+      ['all', 'Agahan', 'Tanghalian', 'Dessert'].forEach(f => {
+        const btn = document.getElementById(`dishFilter-${f}`);
+        if (btn) {
+          btn.className = (f === filter) ? "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-600 text-white shadow-xs cursor-pointer whitespace-nowrap" : "px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-amber-900 cursor-pointer whitespace-nowrap";
+        }
       });
       renderDishes();
     }
@@ -840,30 +1280,52 @@
         return matchMeal && matchSearch;
       });
 
-      container.innerHTML = filtered.map(d => `
-        <div class="bg-white rounded-2xl overflow-hidden border border-amber-100 shadow-xs flex flex-col justify-between">
-          <div>
-            <div class="relative h-48 bg-slate-100 overflow-hidden">
-              <img src="${d.img}" class="w-full h-full object-cover">
-              <span class="absolute top-3 left-3 ${d.mealtime === 'Agahan' ? 'bg-amber-500' : 'bg-orange-600'} text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full shadow-sm">
-                ${d.mealtime === 'Agahan' ? '🌅 Agahan' : '☀️ Tanghalian'}
-              </span>
-              <button onclick="openEditDishModal(${d.id})" class="absolute top-3 right-3 bg-slate-900/80 hover:bg-slate-900 text-white text-xs px-2.5 py-1.5 rounded-full font-bold transition cursor-pointer">
-                <i class="fa-solid fa-pen text-[10px]"></i> Edit
-              </button>
-              <span class="absolute bottom-3 right-3 bg-slate-900/80 text-white text-[11px] font-bold px-2.5 py-1 rounded-full">${d.badge || '⭐ Specialty'}</span>
-            </div>
-            <div class="p-5 space-y-2">
-              <h3 class="font-black text-slate-800 text-base leading-snug">${d.title}</h3>
-              <p class="text-slate-500 text-xs leading-relaxed">${d.desc}</p>
+      const categories = [
+        { key: 'Agahan', label: '🌅 Agahan (Breakfast)', icon: '🍳' },
+        { key: 'Tanghalian', label: '☀️ Tanghalian (Lunch & Dinner)', icon: '🍲' },
+        { key: 'Dessert', label: '🍮 Dessert (Pang-himagas)', icon: '🍮' }
+      ];
+
+      container.innerHTML = categories.map(cat => {
+        const dishesInCat = filtered.filter(d => d.mealtime === cat.key);
+        if (dishesInCat.length === 0) return '';
+
+        return `
+          <div class="space-y-4">
+            <h3 class="text-base font-black text-amber-900 flex items-center space-x-2 border-b border-amber-200 pb-2">
+              <span>${cat.icon}</span>
+              <span>${cat.label}</span>
+              <span class="text-xs bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full">${dishesInCat.length}</span>
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              ${dishesInCat.map(d => `
+                <div class="bg-white rounded-2xl overflow-hidden border border-amber-100 shadow-xs flex flex-col justify-between">
+                  <div>
+                    <div class="relative h-48 bg-slate-100 overflow-hidden">
+                      <img src="${d.img}" class="w-full h-full object-cover">
+                      <button onclick="openEditDishModal(${d.id})" class="absolute top-3 right-3 bg-slate-900/80 hover:bg-slate-900 text-white text-xs px-2.5 py-1.5 rounded-full font-bold transition cursor-pointer">
+                        <i class="fa-solid fa-pen text-[10px]"></i> Edit
+                      </button>
+                      <span class="absolute bottom-3 right-3 bg-slate-900/80 text-white text-[11px] font-bold px-2.5 py-1 rounded-full">${d.badge || '⭐ Specialty'}</span>
+                    </div>
+                    <div class="p-5 space-y-2">
+                      <h3 class="font-black text-slate-800 text-base leading-snug">${d.title}</h3>
+                      <p class="text-slate-500 text-xs leading-relaxed">${d.desc}</p>
+                      <button onclick="openRecipeModal(${d.id})" class="text-xs font-bold text-amber-700 hover:text-amber-900 underline inline-flex items-center space-x-1 pt-1 cursor-pointer">
+                        <i class="fa-solid fa-book-open"></i><span>View Ingredients & Recipe</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="px-5 pb-5 pt-2 border-t border-slate-100 flex items-center space-x-2">
+                    <button onclick="openCookModal(${d.id})" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs py-2.5 rounded-xl transition shadow-xs cursor-pointer">Cook / Prep This</button>
+                    <button onclick="openEditDishModal(${d.id})" class="bg-amber-50 hover:bg-amber-100 text-amber-800 p-2.5 rounded-xl text-xs border border-amber-200 cursor-pointer"><i class="fa-solid fa-pen-to-square"></i></button>
+                  </div>
+                </div>
+              `).join('')}
             </div>
           </div>
-          <div class="px-5 pb-5 pt-2 border-t border-slate-100 flex items-center space-x-2">
-            <button onclick="openCookModal(${d.id})" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs py-2.5 rounded-xl transition shadow-xs cursor-pointer">Cook This Dish</button>
-            <button onclick="openEditDishModal(${d.id})" class="bg-amber-50 hover:bg-amber-100 text-amber-800 p-2.5 rounded-xl text-xs border border-amber-200 cursor-pointer"><i class="fa-solid fa-pen-to-square"></i></button>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     function openAddDishModal() {
@@ -872,6 +1334,8 @@
       document.getElementById('newDishTitle').value = "";
       document.getElementById('newDishBadge').value = "";
       document.getElementById('newDishDesc').value = "";
+      document.getElementById('newDishIngredients').value = "";
+      document.getElementById('newDishProcess').value = "";
       document.getElementById('newDishImageUrl').value = "";
       document.getElementById('newDishPhotoPreview').classList.add('hidden');
       document.getElementById('newDishPhotoIcon').classList.remove('hidden');
@@ -889,6 +1353,10 @@
       document.getElementById('newDishMealtime').value = dish.mealtime;
       document.getElementById('newDishBadge').value = dish.badge;
       document.getElementById('newDishDesc').value = dish.desc;
+      
+      document.getElementById('newDishIngredients').value = (dish.ingredients || []).join('\n');
+      document.getElementById('newDishProcess').value = (dish.process || []).join('\n');
+
       document.getElementById('newDishImageUrl').value = dish.img;
       document.getElementById('newDishPhotoPreview').src = dish.img;
       document.getElementById('newDishPhotoPreview').classList.remove('hidden');
@@ -925,13 +1393,20 @@
       const mealtime = document.getElementById('newDishMealtime').value;
       const badge = document.getElementById('newDishBadge').value.trim() || '⭐ Specialty';
       const desc = document.getElementById('newDishDesc').value.trim();
+      
+      const ingredientsRaw = document.getElementById('newDishIngredients').value.trim();
+      const ingredients = ingredientsRaw ? ingredientsRaw.split('\n').map(s => s.trim()).filter(Boolean) : ["Ingredients not specified"];
+
+      const processRaw = document.getElementById('newDishProcess').value.trim();
+      const process = processRaw ? processRaw.split('\n').map(s => s.trim()).filter(Boolean) : ["Cooking process not specified"];
+
       const img = tempDishImage || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80";
       if (!title) return;
 
       if (editingDishId) {
-        dishes = dishes.map(d => d.id === editingDishId ? { ...d, title, mealtime, badge, desc, img } : d);
+        dishes = dishes.map(d => d.id === editingDishId ? { ...d, title, mealtime, badge, desc, ingredients, process, img } : d);
       } else {
-        dishes.unshift({ id: Date.now(), title, mealtime, badge, desc, img });
+        dishes.unshift({ id: Date.now(), title, mealtime, badge, desc, ingredients, process, img });
       }
 
       savePersonalDataToFirestore();
@@ -939,7 +1414,39 @@
       renderDishes();
     }
 
-    // --- COOK & LEFTOVER CONTROLS (WITH REMOVE LEFTOVER OPTIONS) ---
+    function openRecipeModal(id) {
+      const d = dishes.find(dish => dish.id === id);
+      if (!d) return;
+
+      document.getElementById('recipeModalTitle').innerText = d.title;
+      document.getElementById('recipeModalImg').src = d.img;
+      document.getElementById('recipeModalDesc').innerText = d.desc;
+
+      const ingList = document.getElementById('recipeModalIngredients');
+      const defaultIngs = d.ingredients && d.ingredients.length ? d.ingredients : ["Ingredients not specified"];
+      ingList.innerHTML = defaultIngs.map(ing => `
+        <li class="text-xs text-slate-700 flex items-center space-x-2">
+          <i class="fa-solid fa-check text-amber-600 text-[10px]"></i>
+          <span>${ing}</span>
+        </li>
+      `).join('');
+
+      const procList = document.getElementById('recipeModalProcess');
+      const defaultProc = d.process && d.process.length ? d.process : ["Cooking process not specified"];
+      procList.innerHTML = defaultProc.map(step => `
+        <li class="text-xs text-slate-700 leading-relaxed font-medium">
+          ${step}
+        </li>
+      `).join('');
+
+      document.getElementById('recipeModal').classList.remove('hidden');
+    }
+
+    function closeRecipeModal() {
+      document.getElementById('recipeModal').classList.add('hidden');
+    }
+
+    // --- COOK & LEFTOVER CONTROLS ---
     function openCookModal(id) {
       selectedDishForCook = dishes.find(d => d.id === id);
       if (!selectedDishForCook) return;
@@ -989,7 +1496,7 @@
       closeCookModal();
       renderCookingLog();
       renderLeftovers();
-      alert(`Logged cooking for ${selectedDishForCook.title}!`);
+      alert(`Logged preparation for ${selectedDishForCook.title}!`);
     }
 
     function shareDishToFeed() {
@@ -998,7 +1505,7 @@
         id: Date.now(),
         author: currentUserProfile.name,
         avatar: currentUserProfile.avatar,
-        text: `🍳 Freshly cooked ${selectedDishForCook.title}! Come eat!`,
+        text: `🍳 Freshly prepared ${selectedDishForCook.title}! Come eat!`,
         image: selectedDishForCook.img,
         likes: 0,
         time: "Just now",
@@ -1021,7 +1528,7 @@
         <div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-xs">
           <div>
             <p class="font-black text-slate-800 text-sm">${log.dishName}</p>
-            <p class="text-slate-500">Cooked by ${log.cookedBy} • ${log.servings} serving(s)</p>
+            <p class="text-slate-500">Prepared by ${log.cookedBy} • ${log.servings} serving(s)</p>
           </div>
           <div class="text-right text-[11px] text-slate-400 font-bold"><p>${log.time}</p><p>${log.date}</p></div>
         </div>
