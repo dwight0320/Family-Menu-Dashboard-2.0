@@ -386,20 +386,26 @@
   <!-- SCRIPT LOGIC -->
   <script>
     // --- FIREBASE INITIALIZATION ---
-    const firebaseConfig = {
-      apiKey: "AIzaSyCa5QNWR8biyNzfbKUVrp9Qmso7oD8P3jQ",
-      authDomain: "home-101-4bc02.firebaseapp.com",
-      projectId: "home-101-4bc02",
-      storageBucket: "home-101-4bc02.firebasestorage.app",
-      messagingSenderId: "502483425742",
-      appId: "1:502483425742:web:407aeaadc99cf1e158f39f",
-      measurementId: "G-JDL2KQ469E"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
+    let db = null;
     const HOUSEHOLD_DOC_ID = "dangelo_home_main";
+
+    try {
+      const firebaseConfig = {
+        apiKey: "AIzaSyCa5QNWR8biyNzfbKUVrp9Qmso7oD8P3jQ",
+        authDomain: "home-101-4bc02.firebaseapp.com",
+        projectId: "home-101-4bc02",
+        storageBucket: "home-101-4bc02.firebasestorage.app",
+        messagingSenderId: "502483425742",
+        appId: "1:502483425742:web:407aeaadc99cf1e158f39f",
+        measurementId: "G-JDL2KQ469E"
+      };
+      if (typeof firebase !== 'undefined') {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+      }
+    } catch (e) {
+      console.warn("Firebase initialization warning:", e);
+    }
 
     const default22Dishes = [
       { id: 1, title: "Stir-Fried Tokwa & Kangkong in Soy-Kalamansi", mealtime: "Agahan", badge: "🌱 Healthy High-Protein", desc: "Crispy fried tofu and fresh kangkong stems tossed in garlic soy-kalamansi sauce.", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80" },
@@ -433,7 +439,27 @@
       household: 'DANGELO-HOME'
     };
 
-    let pantry = [];
+    let pantry = [
+      { id: 1, name: 'Pork Liempo / Chunks', qty: 3, unit: 'containers', lowThreshold: 1 },
+      { id: 2, name: 'Fish Fillet', qty: 2, unit: 'containers', lowThreshold: 1 },
+      { id: 3, name: 'Egg', qty: 12, unit: 'pcs', lowThreshold: 4 },
+      { id: 4, name: 'Giniling (Ground Pork)', qty: 4, unit: 'containers', lowThreshold: 1 },
+      { id: 5, name: 'Korean Spam', qty: 2, unit: 'pcs', lowThreshold: 1 },
+      { id: 6, name: 'Firm Tokwa', qty: 4, unit: 'pcs', lowThreshold: 1 },
+      { id: 7, name: 'Dilis', qty: 2, unit: 'packs', lowThreshold: 1 },
+      { id: 8, name: 'Sayote', qty: 3, unit: 'pcs', lowThreshold: 1 },
+      { id: 9, name: 'Kangkong', qty: 2, unit: 'tali', lowThreshold: 1 },
+      { id: 10, name: 'Gabi', qty: 4, unit: 'pcs', lowThreshold: 1 },
+      { id: 11, name: 'Kamatis', qty: 6, unit: 'pcs', lowThreshold: 2 },
+      { id: 12, name: 'Kalamansi', qty: 10, unit: 'pcs', lowThreshold: 3 },
+      { id: 13, name: 'Saging Saba', qty: 5, unit: 'pcs', lowThreshold: 2 },
+      { id: 14, name: 'Potato', qty: 4, unit: 'pcs', lowThreshold: 1 },
+      { id: 15, name: 'Kamote', qty: 3, unit: 'pcs', lowThreshold: 1 },
+      { id: 16, name: 'Ginger', qty: 1, unit: 'pcs', lowThreshold: 1 },
+      { id: 17, name: 'Bell Pepper', qty: 2, unit: 'pcs', lowThreshold: 1 },
+      { id: 18, name: 'Mongo', qty: 1, unit: 'packs', lowThreshold: 1 }
+    ];
+
     let dishes = default22Dishes;
     let cookingLog = [];
     let leftovers = [];
@@ -450,25 +476,30 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       syncUserUI();
+      renderFeed();
+      renderDishes();
+      renderPantry();
+      renderCookingLog();
+      renderLeftovers();
       initFirestoreListener();
     });
 
     // --- REAL-TIME FIRESTORE SYNC ---
     function initFirestoreListener() {
+      if (!db) return;
       db.collection("households").doc(HOUSEHOLD_DOC_ID).onSnapshot((doc) => {
         if (doc.exists) {
           const data = doc.data();
-          pantry = data.pantry || getDefaultPantry();
-          dishes = data.dishes || default22Dishes;
-          cookingLog = data.cookingLog || [];
-          leftovers = data.leftovers || [];
-          feedPosts = data.feedPosts || feedPosts;
+          if (data.pantry) pantry = data.pantry;
+          if (data.dishes) dishes = data.dishes;
+          if (data.cookingLog) cookingLog = data.cookingLog;
+          if (data.leftovers) leftovers = data.leftovers;
+          if (data.feedPosts) feedPosts = data.feedPosts;
           if (data.householdName) {
             currentUser.householdName = data.householdName;
             currentUser.household = data.householdId || currentUser.household;
           }
         } else {
-          pantry = getDefaultPantry();
           saveToFirestore();
         }
         syncUserUI();
@@ -483,6 +514,7 @@
     }
 
     function saveToFirestore() {
+      if (!db) return;
       db.collection("households").doc(HOUSEHOLD_DOC_ID).set({
         pantry,
         dishes,
@@ -494,29 +526,6 @@
       }, { merge: true }).catch((error) => {
         console.error("Error saving to Firestore: ", error);
       });
-    }
-
-    function getDefaultPantry() {
-      return [
-        { id: 1, name: 'Pork Liempo / Chunks', qty: 3, unit: 'containers', lowThreshold: 1 },
-        { id: 2, name: 'Fish Fillet', qty: 2, unit: 'containers', lowThreshold: 1 },
-        { id: 3, name: 'Egg', qty: 12, unit: 'pcs', lowThreshold: 4 },
-        { id: 4, name: 'Giniling (Ground Pork)', qty: 4, unit: 'containers', lowThreshold: 1 },
-        { id: 5, name: 'Korean Spam', qty: 2, unit: 'pcs', lowThreshold: 1 },
-        { id: 6, name: 'Firm Tokwa', qty: 4, unit: 'pcs', lowThreshold: 1 },
-        { id: 7, name: 'Dilis', qty: 2, unit: 'packs', lowThreshold: 1 },
-        { id: 8, name: 'Sayote', qty: 3, unit: 'pcs', lowThreshold: 1 },
-        { id: 9, name: 'Kangkong', qty: 2, unit: 'tali', lowThreshold: 1 },
-        { id: 10, name: 'Gabi', qty: 4, unit: 'pcs', lowThreshold: 1 },
-        { id: 11, name: 'Kamatis', qty: 6, unit: 'pcs', lowThreshold: 2 },
-        { id: 12, name: 'Kalamansi', qty: 10, unit: 'pcs', lowThreshold: 3 },
-        { id: 13, name: 'Saging Saba', qty: 5, unit: 'pcs', lowThreshold: 2 },
-        { id: 14, name: 'Potato', qty: 4, unit: 'pcs', lowThreshold: 1 },
-        { id: 15, name: 'Kamote', qty: 3, unit: 'pcs', lowThreshold: 1 },
-        { id: 16, name: 'Ginger', qty: 1, unit: 'pcs', lowThreshold: 1 },
-        { id: 17, name: 'Bell Pepper', qty: 2, unit: 'pcs', lowThreshold: 1 },
-        { id: 18, name: 'Mongo', qty: 1, unit: 'packs', lowThreshold: 1 }
-      ];
     }
 
     function syncUserUI() {
